@@ -1,0 +1,10 @@
+vortexgin_auth_login:
+    path:     /login
+    defaults: { _controller: VortexginAuthBundle:Default:login }
+    requirements:
+        _method: POST
+vortexgin_auth_logout:
+    path:     /logout
+    defaults: { _controller: VortexginAuthBundle:Default:logout }
+    requirements:
+        _method: POST

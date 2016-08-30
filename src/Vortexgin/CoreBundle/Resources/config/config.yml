@@ -1,0 +1,9 @@
+vortexgin_core:
+    host: http://cpg.local/
+    image:
+        mime_types:
+            - image/jpg
+            - image/jpeg
+            - image/pjpeg
+            - image/gif
+            - image/png

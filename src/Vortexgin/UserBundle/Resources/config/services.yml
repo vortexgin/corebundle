@@ -1,0 +1,6 @@
+services:
+    vortexgin.user.manager.user:
+        class: Vortexgin\UserBundle\Manager\UserManager
+        arguments:
+            - @service_container
+            - %vortexgin.user.user_class%
