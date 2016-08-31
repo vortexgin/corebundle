@@ -50,6 +50,9 @@ class BaseController extends Controller {
     */
     protected $dataTemplate = array();
 
+    /* @var $redisManager \Vortexgin\CoreBundle\Manager\RedisManager */
+    protected $redisManager;
+
     protected function init() {
         date_default_timezone_set('Asia/Jakarta');
         $this->em       = $this->container->get('doctrine')->getManager();
@@ -60,8 +63,10 @@ class BaseController extends Controller {
         $userManager = $this->container->get('vortexgin.user.manager.user');
         $this->user = new User();
         if($userManager->getCurrentUser()){
-            $this->user = $userManager->getCurrentUser();          
+            $this->user = $userManager->getCurrentUser();
         }
+
+        $this->redisManager = $this->container->get('vortexgin.core.manager.redis');
 
         $this->dataTemplate = array(
             'endpoint' => $this->container->getParameter('vortexgin.core.api_endpoint'),

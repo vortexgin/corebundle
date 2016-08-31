@@ -1,6 +1,6 @@
 <?php
 
-namespace DS\CoreBundle\Manager;
+namespace Vortexgin\CoreBundle\Manager;
 
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
@@ -123,7 +123,7 @@ abstract class MongoManager extends Manager
 
         return array($orderBy, $orderSort, $offset, $limit);
     }
-    
+
     protected function getResult($queryBuilder, $hydration = false, $useCache = true, $lifetime = 5)
     {
         $query = $queryBuilder->getQuery();

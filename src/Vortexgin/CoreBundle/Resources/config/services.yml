@@ -1,4 +1,9 @@
 services:
-#    vortexgin_core.example:
-#        class: Vortexgin\CoreBundle\Example
-#        arguments: [@service_id, "plain_value", %parameter%]
+    vortexgin.core.manager.redis:
+        class: Vortexgin\CoreBundle\Manager\RedisManager
+        arguments:
+            - @service_container
+    vortexgin.twig.ds_extension:
+        class: Vortexgin\CoreBundle\Twig\DSExtension
+        tags:
+            - { name: twig.extension }

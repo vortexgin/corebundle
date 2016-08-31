@@ -1,9 +1,10 @@
 <?php
 
-namespace DS\CoreBundle\Manager;
+namespace Vortexgin\CoreBundle\Manager;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Codeception\Lib\Driver\Redis;
+use Vortexgin\CoreBundle\Util\String;
 
 /**
  * RedisAction cache operation
@@ -55,7 +56,7 @@ class RedisManager {
                 $ttl = $this->redis->ttl($key);
                 if($ttl > 0){
                     $value = $this->redis->get($key);
-                    if ($this->isJson($value)) {
+                    if (String::isJson($value)) {
                         $value = json_decode($value, true);
                     }
                     return $value;
@@ -70,7 +71,7 @@ class RedisManager {
     public function setCache($key, $value, $lifetime=7200) {
         try {
             $this->redis->del($key);
-            
+
             if (is_array($value)) {
                 $value = json_encode($value);
             }
@@ -160,11 +161,6 @@ class RedisManager {
           $this->container->get('logger')->error($e->getMessage());
           $this->container->get('logger')->error($e->getTraceAsString());
         }
-    }
-
-    private function isJson($string) {
-        @json_decode($string);
-        return (json_last_error() == JSON_ERROR_NONE);
     }
 
     public function generateAdditionalKey(array $param = array()){
