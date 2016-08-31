@@ -4,6 +4,6 @@ services:
         arguments:
             - @service_container
     vortexgin.twig.ds_extension:
-        class: Vortexgin\CoreBundle\Twig\DSExtension
+        class: Vortexgin\CoreBundle\Twig\VortexginExtension
         tags:
             - { name: twig.extension }
