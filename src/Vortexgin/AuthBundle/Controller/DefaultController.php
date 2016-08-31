@@ -38,9 +38,9 @@ class DefaultController extends BaseController {
       /** @var $fosUserManager \FOS\UserBundle\Model\UserManagerInterface */
       $fosUserManager = $this->container->get('fos_user.user_manager');
       /** @var $userManager \Vortexgin\UserBundle\Manager\UserManager */
-      $userManager = $this->container->get('ds.user.manager.user');
+      $userManager = $this->container->get('vortexgin.user.manager.user');
       /** @var $clientManager \Vortexgin\UserBundle\Manager\OAuthTokenManager */
-      $tokenManager = $this->container->get('ds.oauth.manager.token');
+      $tokenManager = $this->container->get('vortexgin.oauth.manager.token');
       $securityFactory = $this->container->get('security.encoder_factory');
 
 
