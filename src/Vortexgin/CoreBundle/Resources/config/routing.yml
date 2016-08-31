@@ -1,0 +1,13 @@
+admin_login:
+    pattern:  /login
+    defaults: { _controller: VortexginCoreBundle:Security:login }
+admin_login_check:
+    pattern:  /login_check
+    defaults: { _controller: VortexginCoreBundle:Security:check }
+admin_logout:
+    pattern:  /logout
+    defaults: { _controller: VortexginCoreBundle:Security:logout }
+
+admin_homepage:
+    pattern: /
+    defaults: { _controller: VortexginCoreBundle:Default:index }
