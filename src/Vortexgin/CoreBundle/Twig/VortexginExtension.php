@@ -6,7 +6,7 @@ class VortexginExtension extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            'stripslashes' => new \Twig_Filter_Method($this, 'customStripslashes'),
+            //'stripslashes' => new \Twig_Filter_Method($this, 'customStripslashes'),
         );
     }
 
