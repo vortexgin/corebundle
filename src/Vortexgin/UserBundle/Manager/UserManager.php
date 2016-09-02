@@ -27,7 +27,7 @@ final class UserManager extends Manager {
 
     /**
      *
-     * @param ORORI\NewsBundle\Entity\NewsCategory $object
+     * @param Vortexgin\UserBundle\Entity\User $object
      *
      * @return boolean
      *
@@ -42,7 +42,7 @@ final class UserManager extends Manager {
 
     /**
      *
-     * @param ORORI\NewsBundle\Entity\NewsCategory $object
+     * @param Vortexgin\UserBundle\Entity\User $object
      *
      * @return array
      *          - string id
