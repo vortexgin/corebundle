@@ -12,6 +12,7 @@ use Vortexgin\CoreBundle\Controller\BaseController;
 use Vortexgin\CoreBundle\Util\HttpStatusHelper;
 use Vortexgin\CoreBundle\Util\Validator;
 use Vortexgin\UserBundle\Entity\User;
+use Vortexgin\UserBundle\Util\UserFilterGenerator;
 
 class UserController extends BaseController{
     /**
@@ -112,23 +113,7 @@ class UserController extends BaseController{
             /** @var $userManager \Vortexgin\UserBundle\Manager\UserManager */
             $userManager = $this->container->get('vortexgin.user.manager.user');
 
-            $filter = array();
-            if(Validator::validate($get, 'query', null, 'empty')){
-                if(Validator::validate($get, 'fields', null, 'empty')){
-                    $fields = json_decode($get['fields'], true);
-                    foreach($fields as $field){
-                        $get[$field] = $get['query'];
-                    }
-                }else{
-                    $get['username'] = $get['query'];
-                }
-            }
-            if(Validator::validate($get, 'id', null, 'empty'))
-                $filter[] = array('id', $get['id']);
-            if(Validator::validate($get, 'email', null, 'empty'))
-                $filter[] = array('email', $get['email'], 'like');
-            if(Validator::validate($get, 'username', null, 'empty'))
-                $filter[] = array('username', $get['username'], 'like');
+            $filter = UserFilterGenerator::generateFilter($get);
 
             list($orderBy, $orderSort, $limit, $page) = $this->extractDefaultParameter($userManager, $get);
 

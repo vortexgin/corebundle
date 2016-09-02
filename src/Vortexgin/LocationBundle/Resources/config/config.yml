@@ -1,0 +1,4 @@
+ds_location:
+    provinsi_class: DS\LocationBundle\Entity\Provinsi
+    kota_class: DS\LocationBundle\Entity\Kota
+    area_class: DS\LocationBundle\Entity\Area

@@ -1,0 +1,62 @@
+ds_provinsi_create:
+    path:     /provinsi
+    defaults: { _controller: DSLocationBundle:Provinsi:create }
+    requirements:
+        _method: POST
+ds_provinsi_read:
+    path:     /provinsi
+    defaults: { _controller: DSLocationBundle:Provinsi:read }
+    requirements:
+        _method: GET
+ds_provinsi_update:
+    path:     /provinsi/{id}
+    defaults: { _controller: DSLocationBundle:Provinsi:update, id: 0 }
+    requirements:
+        _method: PATCH
+ds_provinsi_delete:
+    path:     /provinsi/{id}
+    defaults: { _controller: DSLocationBundle:Provinsi:delete, id: 0 }
+    requirements:
+        _method: DELETE
+
+ds_kota_create:
+    path:     /kota
+    defaults: { _controller: DSLocationBundle:Kota:create }
+    requirements:
+        _method: POST
+ds_kota_read:
+    path:     /kota
+    defaults: { _controller: DSLocationBundle:Kota:read }
+    requirements:
+        _method: GET
+ds_kota_update:
+    path:     /kota/{id}
+    defaults: { _controller: DSLocationBundle:Kota:update, id: 0 }
+    requirements:
+        _method: PATCH
+ds_kota_delete:
+    path:     /kota/{id}
+    defaults: { _controller: DSLocationBundle:Kota:delete, id: 0 }
+    requirements:
+        _method: DELETE
+
+ds_area_create:
+    path:     /area
+    defaults: { _controller: DSLocationBundle:Area:create }
+    requirements:
+        _method: POST
+ds_area_read:
+    path:     /area
+    defaults: { _controller: DSLocationBundle:Area:read }
+    requirements:
+        _method: GET
+ds_area_update:
+    path:     /area/{id}
+    defaults: { _controller: DSLocationBundle:Area:update, id: 0 }
+    requirements:
+        _method: PATCH
+ds_area_delete:
+    path:     /area/{id}
+    defaults: { _controller: DSLocationBundle:Area:delete, id: 0 }
+    requirements:
+        _method: DELETE
