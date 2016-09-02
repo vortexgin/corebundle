@@ -62,7 +62,7 @@ class BaseController extends Controller {
         /** @var $userManager \Vortexgin\UserBundle\Manager\UserManager */
         $userManager = $this->container->get('vortexgin.user.manager.user');
         $this->user = new User();
-        if($userManager->getCurrentUser()){
+        if($userManager->getCurrentUser() instanceof User){
             $this->user = $userManager->getCurrentUser();
         }
 
