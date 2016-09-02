@@ -1,4 +1,4 @@
-ds_location:
-    provinsi_class: DS\LocationBundle\Entity\Provinsi
-    kota_class: DS\LocationBundle\Entity\Kota
-    area_class: DS\LocationBundle\Entity\Area
+vortexgin_location:
+    provinsi_class: Vortexgin\LocationBundle\Entity\Provinsi
+    kota_class: Vortexgin\LocationBundle\Entity\Kota
+    area_class: Vortexgin\LocationBundle\Entity\Area

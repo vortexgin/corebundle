@@ -1,62 +1,62 @@
-ds_provinsi_create:
+vortexgin_provinsi_create:
     path:     /provinsi
-    defaults: { _controller: DSLocationBundle:Provinsi:create }
+    defaults: { _controller: VortexginLocationBundle:Provinsi:create }
     requirements:
         _method: POST
-ds_provinsi_read:
+vortexgin_provinsi_read:
     path:     /provinsi
-    defaults: { _controller: DSLocationBundle:Provinsi:read }
+    defaults: { _controller: VortexginLocationBundle:Provinsi:read }
     requirements:
         _method: GET
-ds_provinsi_update:
+vortexgin_provinsi_update:
     path:     /provinsi/{id}
-    defaults: { _controller: DSLocationBundle:Provinsi:update, id: 0 }
+    defaults: { _controller: VortexginLocationBundle:Provinsi:update, id: 0 }
     requirements:
         _method: PATCH
-ds_provinsi_delete:
+vortexgin_provinsi_delete:
     path:     /provinsi/{id}
-    defaults: { _controller: DSLocationBundle:Provinsi:delete, id: 0 }
+    defaults: { _controller: VortexginLocationBundle:Provinsi:delete, id: 0 }
     requirements:
         _method: DELETE
 
-ds_kota_create:
+vortexgin_kota_create:
     path:     /kota
-    defaults: { _controller: DSLocationBundle:Kota:create }
+    defaults: { _controller: VortexginLocationBundle:Kota:create }
     requirements:
         _method: POST
-ds_kota_read:
+vortexgin_kota_read:
     path:     /kota
-    defaults: { _controller: DSLocationBundle:Kota:read }
+    defaults: { _controller: VortexginLocationBundle:Kota:read }
     requirements:
         _method: GET
-ds_kota_update:
+vortexgin_kota_update:
     path:     /kota/{id}
-    defaults: { _controller: DSLocationBundle:Kota:update, id: 0 }
+    defaults: { _controller: VortexginLocationBundle:Kota:update, id: 0 }
     requirements:
         _method: PATCH
-ds_kota_delete:
+vortexgin_kota_delete:
     path:     /kota/{id}
-    defaults: { _controller: DSLocationBundle:Kota:delete, id: 0 }
+    defaults: { _controller: VortexginLocationBundle:Kota:delete, id: 0 }
     requirements:
         _method: DELETE
 
-ds_area_create:
+vortexgin_area_create:
     path:     /area
-    defaults: { _controller: DSLocationBundle:Area:create }
+    defaults: { _controller: VortexginLocationBundle:Area:create }
     requirements:
         _method: POST
-ds_area_read:
+vortexgin_area_read:
     path:     /area
-    defaults: { _controller: DSLocationBundle:Area:read }
+    defaults: { _controller: VortexginLocationBundle:Area:read }
     requirements:
         _method: GET
-ds_area_update:
+vortexgin_area_update:
     path:     /area/{id}
-    defaults: { _controller: DSLocationBundle:Area:update, id: 0 }
+    defaults: { _controller: VortexginLocationBundle:Area:update, id: 0 }
     requirements:
         _method: PATCH
-ds_area_delete:
+vortexgin_area_delete:
     path:     /area/{id}
-    defaults: { _controller: DSLocationBundle:Area:delete, id: 0 }
+    defaults: { _controller: VortexginLocationBundle:Area:delete, id: 0 }
     requirements:
         _method: DELETE

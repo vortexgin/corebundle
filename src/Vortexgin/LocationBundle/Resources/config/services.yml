@@ -1,18 +1,18 @@
 services:
-    ds.location.manager.provinsi:
-        class: DS\LocationBundle\Manager\ProvinsiManager
+    vortexgin.location.manager.provinsi:
+        class: Vortexgin\LocationBundle\Manager\ProvinsiManager
         arguments:
             - @service_container
-            - %ds.location.provinsi_class%
-    ds.location.manager.kota:
-        class: DS\LocationBundle\Manager\KotaManager
+            - %vortexgin.location.provinsi_class%
+    vortexgin.location.manager.kota:
+        class: Vortexgin\LocationBundle\Manager\KotaManager
         arguments:
             - @service_container
-            - %ds.location.kota_class%
-            - @ds.location.manager.provinsi
-    ds.location.manager.area:
-        class: DS\LocationBundle\Manager\AreaManager
+            - %vortexgin.location.kota_class%
+            - @vortexgin.location.manager.provinsi
+    vortexgin.location.manager.area:
+        class: Vortexgin\LocationBundle\Manager\AreaManager
         arguments:
             - @service_container
-            - %ds.location.area_class%
-            - @ds.location.manager.kota
+            - %vortexgin.location.area_class%
+            - @vortexgin.location.manager.kota

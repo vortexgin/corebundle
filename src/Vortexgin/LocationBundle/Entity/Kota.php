@@ -1,10 +1,10 @@
 <?php
 
-namespace DS\LocationBundle\Entity;
+namespace Vortexgin\LocationBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use DS\CoreBundle\Entity\Base as BaseEntity;
-use DS\LocationBundle\Entity\Provinsi;
+use Vortexgin\CoreBundle\Entity\Base as BaseEntity;
+use Vortexgin\LocationBundle\Entity\Provinsi;
 
 /**
  * Soal

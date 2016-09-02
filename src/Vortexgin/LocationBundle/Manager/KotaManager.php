@@ -1,11 +1,11 @@
 <?php
 
-namespace DS\LocationBundle\Manager;
+namespace Vortexgin\LocationBundle\Manager;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use DS\CoreBundle\Manager\Manager;
-use DS\LocationBundle\Entity\Kota;
+use Vortexgin\CoreBundle\Manager\Manager;
+use Vortexgin\LocationBundle\Entity\Kota;
 
 final class KotaManager extends Manager {
     private $provinsiManager;
@@ -30,7 +30,7 @@ final class KotaManager extends Manager {
 
     /**
      *
-     * @param DS\LocationBundle\Entity\Kota $object
+     * @param Vortexgin\LocationBundle\Entity\Kota $object
      *
      * @return boolean
      *
@@ -45,7 +45,7 @@ final class KotaManager extends Manager {
 
     /**
      *
-     * @param DS\LocationBundle\Entity\Kota $object
+     * @param Vortexgin\LocationBundle\Entity\Kota $object
      *
      * @return array
      *          - int id

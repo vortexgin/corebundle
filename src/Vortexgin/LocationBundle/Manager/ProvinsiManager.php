@@ -1,11 +1,11 @@
 <?php
 
-namespace DS\LocationBundle\Manager;
+namespace Vortexgin\LocationBundle\Manager;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use DS\CoreBundle\Manager\Manager;
-use DS\LocationBundle\Entity\Provinsi;
+use Vortexgin\CoreBundle\Manager\Manager;
+use Vortexgin\LocationBundle\Entity\Provinsi;
 
 final class ProvinsiManager extends Manager {
     /**
@@ -27,7 +27,7 @@ final class ProvinsiManager extends Manager {
 
     /**
      *
-     * @param DS\LocationBundle\Entity\Provinsi $object
+     * @param Vortexgin\LocationBundle\Entity\Provinsi $object
      *
      * @return boolean
      *
@@ -42,7 +42,7 @@ final class ProvinsiManager extends Manager {
 
     /**
      *
-     * @param DS\LocationBundle\Entity\Provinsi $object
+     * @param Vortexgin\LocationBundle\Entity\Provinsi $object
      *
      * @return array
      *          - int id
