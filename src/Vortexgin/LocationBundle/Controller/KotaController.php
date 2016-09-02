@@ -13,7 +13,7 @@ use Vortexgin\LocationBundle\Util\KotaFilterGenerator;
 class KotaController extends BaseController{
     /**
      * @ApiDoc(
-     *      section="Master",
+     *      section="Vortexgin",
      *      resource="Kota",
      *      description="Create kota",
      *      parameters={
@@ -64,7 +64,7 @@ class KotaController extends BaseController{
 
     /**
      * @ApiDoc(
-     *      section="Master",
+     *      section="Vortexgin",
      *      resource="Kota",
      *      description="Read kota",
      *      parameters={
@@ -120,7 +120,7 @@ class KotaController extends BaseController{
 
     /**
      * @ApiDoc(
-     *      section="Master",
+     *      section="Vortexgin",
      *      resource="Kota",
      *      description="Update kota",
      *      parameters={
@@ -175,7 +175,7 @@ class KotaController extends BaseController{
 
     /**
      * @ApiDoc(
-     *      section="Master",
+     *      section="Vortexgin",
      *      resource="Kota",
      *      description="Delete kota",
      *      statusCodes={

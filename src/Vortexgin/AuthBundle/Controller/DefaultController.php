@@ -13,7 +13,7 @@ class DefaultController extends BaseController {
 
   /**
    * @ApiDoc(
-   *      section="Auth",
+   *      section="Vortexgin",
    *      resource="Authorization",
    *      description="Login into system",
    *      parameters={
@@ -93,7 +93,7 @@ class DefaultController extends BaseController {
 
   /**
    * @ApiDoc(
-   *      section="Auth",
+   *      section="Vortexgin",
    *      resource="Authorization",
    *      description="Logout from system",
    *      parameters={

@@ -13,7 +13,7 @@ use Vortexgin\LocationBundle\Util\ProvinsiFilterGenerator;
 class ProvinsiController extends BaseController{
     /**
      * @ApiDoc(
-     *      section="Master",
+     *      section="Vortexgin",
      *      resource="Provinsi",
      *      description="Create provinsi",
      *      parameters={
@@ -62,7 +62,7 @@ class ProvinsiController extends BaseController{
 
     /**
      * @ApiDoc(
-     *      section="Master",
+     *      section="Vortexgin",
      *      resource="Provinsi",
      *      description="Read provinsi",
      *      parameters={
@@ -118,7 +118,7 @@ class ProvinsiController extends BaseController{
 
     /**
      * @ApiDoc(
-     *      section="Master",
+     *      section="Vortexgin",
      *      resource="Provinsi",
      *      description="Update provinsi",
      *      parameters={
@@ -172,7 +172,7 @@ class ProvinsiController extends BaseController{
 
     /**
      * @ApiDoc(
-     *      section="Master",
+     *      section="Vortexgin",
      *      resource="Provinsi",
      *      description="Delete provinsi",
      *      statusCodes={

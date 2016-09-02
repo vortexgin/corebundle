@@ -13,7 +13,7 @@ use Vortexgin\LocationBundle\Util\AreaFilterGenerator;
 class AreaController extends BaseController{
     /**
      * @ApiDoc(
-     *      section="Master",
+     *      section="Vortexgin",
      *      resource="Area",
      *      description="Create area",
      *      parameters={
@@ -66,7 +66,7 @@ class AreaController extends BaseController{
 
     /**
      * @ApiDoc(
-     *      section="Master",
+     *      section="Vortexgin",
      *      resource="Area",
      *      description="Read area",
      *      parameters={
@@ -123,7 +123,7 @@ class AreaController extends BaseController{
 
     /**
      * @ApiDoc(
-     *      section="Master",
+     *      section="Vortexgin",
      *      resource="Area",
      *      description="Update area",
      *      parameters={
@@ -179,7 +179,7 @@ class AreaController extends BaseController{
 
     /**
      * @ApiDoc(
-     *      section="Master",
+     *      section="Vortexgin",
      *      resource="Area",
      *      description="Delete area",
      *      statusCodes={

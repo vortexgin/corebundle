@@ -17,7 +17,7 @@ use Vortexgin\UserBundle\Util\UserFilterGenerator;
 class UserController extends BaseController{
     /**
      * @ApiDoc(
-     *      section="Master",
+     *      section="Vortexgin",
      *      resource="User",
      *      description="Create user",
      *      parameters={
@@ -86,7 +86,7 @@ class UserController extends BaseController{
 
     /**
      * @ApiDoc(
-     *      section="Master",
+     *      section="Vortexgin",
      *      resource="User",
      *      description="Read user",
      *      parameters={
@@ -142,7 +142,7 @@ class UserController extends BaseController{
 
     /**
      * @ApiDoc(
-     *      section="Master",
+     *      section="Vortexgin",
      *      resource="User",
      *      description="Update user",
      *      parameters={
@@ -219,7 +219,7 @@ class UserController extends BaseController{
 
     /**
      * @ApiDoc(
-     *      section="Master",
+     *      section="Vortexgin",
      *      resource="User",
      *      description="Delete user",
      *      statusCodes={
