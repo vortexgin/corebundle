@@ -1,0 +1,220 @@
+body, *{
+    font-family: 'Roboto', sans-serif;
+    font-style: normal;
+  	font-variant: normal;
+}
+
+/* Navigation  */
+.navbar{
+    background-color: #61c3d0;
+
+    .navbar-header{
+        .navbar-brand{
+            padding-top: 10px;
+
+            img{
+                height:30px;
+            }
+        }
+    }
+    .nav{
+        .dropdown{
+            &:hover, &.open{
+                background-color: #61c3d0;
+            }
+            a{
+                color:#fff;
+            }
+
+            .dropdown-menu{
+                a{
+                    color: #61c3d0;
+                }
+            }
+        }
+    }
+}
+/* PANEL */
+.box-login{
+  margin-top:100px;
+  margin-bottom:50px;
+
+    .panel{
+        .panel-heading{
+            background-color: #61c3d0;
+
+            .panel-title{
+                font-weight: bold;
+            }
+        }
+    }
+    .register{
+        text-align: center;
+    }
+}
+
+/* PAGE WRAPPER */
+.page-content{
+    padding-top: 30px;
+    padding-left: 250px;
+    @media (max-width: 767px){
+        padding-left: 15px;
+    }
+
+    h2{
+        margin-top:0;
+        font-weight: bold;
+        border-bottom: 1px solid #666;
+    }
+    h3{
+        a{
+            font-size: 14px;
+        }
+    }
+    .panel{
+        border-color: #fff;
+        box-shadow: none;
+    }
+}
+
+/* TABS */
+.tab-content{
+    &.register{
+        .tab-pane{
+            margin-top:20px;
+
+            .radio{
+                text-align: left;
+
+                label{
+                    margin-left: 10px;
+                }
+            }
+        }
+    }
+}
+
+/* PAGINATION */
+.pagination{
+    &.soal{
+        > li{
+            &:first-child{
+                > a{
+                    padding-left:0;
+                    padding-right: 23px;
+                }
+            }
+            > a{
+                width:100%;
+                text-align: center;
+            }
+            > select{
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                text-indent: 1px;
+                text-overflow: '';
+
+                &::ms-expand{
+                    display:none;
+                }
+            }
+        }
+    }
+}
+
+/* MODAL */
+.modal{
+    .modal-dialog{
+        .modal-header{
+            padding:10px 15px;
+            background-color: #61c3d0;
+            color: #fff;
+            border-top-left-radius: 6px;
+            -moz-border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+            -moz-border-top-right-radius: 6px;
+
+            .modal-title{
+                font-weight: bold;
+                font-size: 18px;
+            }
+        }
+    }
+    &#modalLoading{
+        .modal-dialog{
+            width:300px;
+
+            .modal-body{
+                text-align: center;
+                padding: 30px;
+            }
+        }
+    }
+    &#modalRegister{
+        .modal-dialog{
+            .modal-body{
+                text-align: center;
+                h2{
+                    text-align: center;
+                }
+            }
+        }
+    }
+}
+
+/* table */
+table.table{
+    thead{
+        tr{
+            th{
+                white-space: nowrap;
+
+                &[rowspan*='2']{
+                    vertical-align: middle;
+                }
+            }
+        }
+    }
+    tbody{
+        tr{
+            td{
+                white-space: nowrap;
+            }
+        }
+    }
+    tfoot{}
+}
+/* FORM */
+form{
+    &[name=ujian]{
+        margin-bottom: 50px;
+
+        .radio{
+            label{
+                margin-right: 10px;
+            }
+        }
+    }
+    &[name=soal]{
+        .form-group{
+            .row{
+                padding-left: 0;
+            }
+        }
+    }
+}
+
+/* BUTTON */
+.btn-primary{
+    background-color: #61c3d0;
+    font-weight: bold;
+}
+.btn-action{
+    margin-top: 20px;
+}
+
+/* JQUERY UI */
+.ui-datepicker-year,
+.ui-datepicker-month{
+    color: #000;
+}
