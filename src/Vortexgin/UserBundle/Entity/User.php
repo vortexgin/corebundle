@@ -13,16 +13,18 @@ class User extends BaseUser{
     const ROLE_SUPER_ADMIN  = 'ROLE_SUPER_ADMIN';
     const ROLE_ADMIN        = 'ROLE_ADMIN';
     const ROLE_USER         = 'ROLE_USER';
+    const ROLE_MEMBER       = 'ROLE_MEMBER';
+    const ROLE_MERCHANT     = 'ROLE_MERCHANT';
 
-    public static $listRole = [self::ROLE_ADMIN, self::ROLE_SUPER_ADMIN, self::ROLE_SUPER_USER];
-    
+    public static $listRole = [self::ROLE_SUPER_ADMIN, self::ROLE_ADMIN, self::ROLE_USER, self::ROLE_MEMBER, self::ROLE_MERCHANT];
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-    
+
     /**
      * @var string
      *
