@@ -21,9 +21,9 @@ class VortexginLocationExtension extends Extension
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
-        $container->setParameter('ds.location.provinsi_class', $config['provinsi_class']);
-        $container->setParameter('ds.location.kota_class',     $config['kota_class']);
-        $container->setParameter('ds.location.area_class',     $config['area_class']);
+        $container->setParameter('vortexgin.location.provinsi_class', $config['provinsi_class']);
+        $container->setParameter('vortexgin.location.kota_class',     $config['kota_class']);
+        $container->setParameter('vortexgin.location.area_class',     $config['area_class']);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
