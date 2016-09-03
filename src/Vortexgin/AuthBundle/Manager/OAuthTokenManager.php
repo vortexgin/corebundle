@@ -65,7 +65,7 @@ final class OAuthTokenManager extends Manager {
         if(! $this->isSupportedObject($object))
             return false;
 
-        $managerClient = $this->container->get('orori.oauth.manager.client');
+        $managerClient = $this->container->get('vortexgin.oauth.manager.client');
         return array(
             'id'            => $object->getId(),
             'token'         => $object->getToken(),
