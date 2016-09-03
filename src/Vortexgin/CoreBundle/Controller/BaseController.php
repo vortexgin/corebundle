@@ -69,7 +69,7 @@ class BaseController extends Controller {
         $this->redisManager = $this->container->get('vortexgin.core.manager.redis');
 
         $this->dataTemplate = array(
-            'endpoint' => $this->container->getParameter('vortexgin.core.api_endpoint'),
+            //'endpoint' => $this->container->getParameter('vortexgin.core.api_endpoint'),
             'uploads' => $this->container->getParameter('vortexgin.core.host').$this->container->getParameter('vortexgin.core.uploads_dir'),
             'user' => array(
                 'id' => $this->user->getId(),
