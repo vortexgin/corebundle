@@ -46,6 +46,14 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->isRequired()
                 ->end()
+                ->arrayNode('kilatstorage')
+                    ->children()
+                        ->scalarNode('access_key')
+                        ->end()
+                        ->scalarNode('secret_key')
+                        ->end()
+                    ->end()
+                ->end()
             ->end()
         ;
 
