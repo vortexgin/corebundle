@@ -1,5 +1,7 @@
 vortexgin_core:
-    host: http://cpg.local/
+    host: http://localhost:9006/
+    uploads:
+        dir: uploads/
     image:
         mime_types:
             - image/jpg
@@ -7,3 +9,6 @@ vortexgin_core:
             - image/pjpeg
             - image/gif
             - image/png
+    kilatstorage:
+        access_key: 123
+        secret_key: 123

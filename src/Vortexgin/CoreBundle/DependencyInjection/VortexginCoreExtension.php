@@ -29,6 +29,12 @@ class VortexginCoreExtension extends Extension
         $container->setParameter('vortexgin.core.uploads_site',     $config['host'].$config['uploads']['dir']);
         $container->setParameter('vortexgin.core.uploads_path',     $path.'/'.$config['uploads']['dir']);
         $container->setParameter('vortexgin.core.image.mime_types', $config['image']['mime_types']);
+        if(array_key_exists('kilatstorage', $config) && array_key_exists('access_key', $config) && !empty($config['kilatstorage']['access_key'])){
+          $container->setParameter('vortexgin.core.kilatstorage.access_key', $config['kilatstorage']['access_key']);
+        }
+        if(array_key_exists('kilatstorage', $config) && array_key_exists('secret_key', $config) && !empty($config['kilatstorage']['secret_key'])){
+          $container->setParameter('vortexgin.core.kilatstorage.secret_key', $config['kilatstorage']['secret_key']);
+        }
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');

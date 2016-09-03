@@ -34,7 +34,7 @@ namespace Vortexgin\CoreBundle\Manager;
 * @version 0.2.3
 *
 **/
-class S3 {
+class KilatStorageManager {
 	// ACL flags
 	const ACL_PRIVATE = 'private';
 	const ACL_PUBLIC_READ = 'public-read';
