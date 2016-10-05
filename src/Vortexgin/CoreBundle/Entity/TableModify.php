@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * TableModify.
  *
  * @ORM\Table(name="table_modify")
- * @ORM\Entity(repositoryClass="ORORI\CoreBundle\Repository\TableModifyRepository")
+ * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  */
 class TableModify
@@ -43,6 +43,13 @@ class TableModify
      */
     private $updatedValue;
 
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="is_active", type="boolean", nullable=false)
+     */
+    protected $isActive = true;
+    
     /**
      * @var \DateTime
      *
@@ -106,6 +113,24 @@ class TableModify
         $this->createdAt = $createdAt;
 
         return $this;
+    }
+
+    /**
+     * @param bool $isActive
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
     }
 
     /**
