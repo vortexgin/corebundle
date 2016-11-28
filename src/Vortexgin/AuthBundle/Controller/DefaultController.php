@@ -112,7 +112,7 @@ class DefaultController extends BaseController {
       $post = $request->request->all();
 
       /** @var $clientManager \Vortexgin\UserBundle\Manager\OAuthTokenManager */
-      $tokenManager = $this->container->get('ds.oauth.manager.token');
+      $tokenManager = $this->container->get('vortexgin.oauth.manager.token');
 
       // request validation
       if (!Validator::validate($post, 'access_token', null, 'empty'))
@@ -127,7 +127,44 @@ class DefaultController extends BaseController {
       return $this->successResponse(array(), HttpStatusHelper::HTTP_NO_CONTENT);
     } catch (\Exception $e) {
       $this->container->get('logger')->error(sprintf($e->getMessage()));
-      return $this->errorResponse('Logout failed, Please try again later', HttpStatusHelper::HTTP_PRECONDITION_FAILED);
+      return $this->errorResponse('Logout failed, Please try again later. '.$e->getMessage(), HttpStatusHelper::HTTP_PRECONDITION_FAILED);
+    }
+  }
+  
+  /**
+   * @ApiDoc(
+   *      section="Vortexgin",
+   *      resource="Authorization",
+   *      description="Validate token",
+   *      parameters={
+   *          {"name"="access_token", "dataType"="string", "required"=true, "description"="access token"},
+   *      },
+   *      statusCodes={
+   *          204="Returned when successful",
+   *          400="Bad request",
+   *          500="System error",
+   *      }
+   * )
+   */
+  public function validateAction(Request $request) {
+    try {
+      $this->init();
+      $post = $request->request->all();
+
+      /** @var $clientManager \Vortexgin\UserBundle\Manager\OAuthTokenManager */
+      $tokenManager = $this->container->get('vortexgin.oauth.manager.token');
+
+      // request validation
+      if (!Validator::validate($post, 'access_token', null, 'empty'))
+        return $this->errorResponse('Please insert access token', HttpStatusHelper::HTTP_BAD_REQUEST);
+      $token = $this->validateToken($post['access_token']);
+      if (!$token)
+        return $this->errorResponse('Invalid token', HttpStatusHelper::HTTP_FORBIDDEN);
+
+      return $this->successResponse(array());
+    } catch (\Exception $e) {
+      $this->container->get('logger')->error(sprintf($e->getMessage()));
+      return $this->errorResponse('Validate failed, Please try again later. '. $e->getMessage(), HttpStatusHelper::HTTP_PRECONDITION_FAILED);
     }
   }
 

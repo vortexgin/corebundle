@@ -8,3 +8,8 @@ vortexgin_auth_logout:
     defaults: { _controller: VortexginAuthBundle:Default:logout }
     requirements:
         _method: POST
+vortexgin_auth_validate:
+    path:     /validate
+    defaults: { _controller: VortexginAuthBundle:Default:validate }
+    requirements:
+        _method: POST
