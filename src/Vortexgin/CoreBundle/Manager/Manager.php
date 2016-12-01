@@ -441,7 +441,7 @@ abstract class Manager
         if(strtolower($orderBy) != 'rand'){          
           $orderBy    = !empty($orderBy) && in_array($orderBy, $this->listOrderBy)?$orderBy:'id';
           $orderBy    = strstr($orderBy, '.')?$orderBy:'er.'.$orderBy;
-          $orderSort  = !empty($orderSort) && in_array($orderSort, array('ASC', 'DESC'))?$orderSort:'DESC';          
+          $orderSort  = !empty($orderSort) && in_array(strtoupper($orderSort), array('ASC', 'DESC'))?$orderSort:'DESC';          
         }
         $page       = !empty($page)?$page:1;
         $limit      = !empty($count)?$count:20;
