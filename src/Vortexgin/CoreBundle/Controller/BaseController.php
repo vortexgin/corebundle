@@ -86,7 +86,7 @@ class BaseController extends Controller {
         }
 
         $orderBy    = array_key_exists('order_by', $get) && !empty($get['order_by']) && in_array($get['order_by'], $manager->getOrderBy())?$get['order_by']:'id';
-        $orderSort  = array_key_exists('order_type', $get) && !empty($get['order_type']) && in_array($get['order_type'], array('ASC', 'DESC'))?$get['order_type']:'DESC';
+        $orderSort  = array_key_exists('order_type', $get) && !empty($get['order_type']) && in_array(strtoupper($get['order_type']), array('ASC', 'DESC', ))?$get['order_type']:'DESC';
         $limit      = array_key_exists('limit', $get) && !empty($get['limit'])?$get['limit']:20;
         $page       = array_key_exists('page', $get) && !empty($get['page'])?$get['page']:1;
 
