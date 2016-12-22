@@ -32,7 +32,7 @@ final class S3Request {
 			else $this->resource = $this->uri;
 		}
 		$this->headers['Date'] = gmdate('D, d M Y H:i:s T');
-		$this->response = new STDClass;
+		$this->response = new \STDClass;
 		$this->response->error = false;
 	}
 	/**
