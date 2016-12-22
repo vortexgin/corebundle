@@ -35,10 +35,6 @@ class Image
           $targetFile = $path.$filename;
 
           $imagine  = new \Imagine\Gd\Imagine();
-          $mode     = \Imagine\Image\ImageInterface::THUMBNAIL_OUTBOUND;
-          $size     = new \Imagine\Image\Box(267, 200);
-          $pallete  = new \Imagine\Image\Palette\RGB();
-          $start    = new \Imagine\Image\Point(1, 1);
           $imagine->load(base64_decode($base64))
                   ->save($targetFile);
 
