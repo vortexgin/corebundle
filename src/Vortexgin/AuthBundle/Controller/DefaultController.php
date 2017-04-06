@@ -85,9 +85,8 @@ class DefaultController extends BaseController {
                   'token' => $token->getToken(),
                       ), HttpStatusHelper::HTTP_CREATED);
     } catch (\Exception $e) {
-      var_dump($e->getMessage());
       $this->container->get('logger')->error(sprintf($e->getMessage()));
-      return $this->errorResponse('Login failed, Please try again later', HttpStatusHelper::HTTP_PRECONDITION_FAILED);
+      return $this->errorResponse('Login failed, Please try again later. '.$e->getMessage(), HttpStatusHelper::HTTP_PRECONDITION_FAILED);
     }
   }
 

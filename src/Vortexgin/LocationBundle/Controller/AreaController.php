@@ -60,7 +60,7 @@ class AreaController extends BaseController{
             return $this->successResponse($areaManager->serialize($area), HttpStatusHelper::HTTP_CREATED);
         }catch(\Exception $e){
             $this->container->get('logger')->error(sprintf($e->getMessage()));
-            return $this->errorResponse('Create area failed, Please try again later', HttpStatusHelper::HTTP_PRECONDITION_FAILED);
+            return $this->errorResponse('Create area failed, Please try again later. '.$e->getMessage(), HttpStatusHelper::HTTP_PRECONDITION_FAILED);
         }
     }
 
@@ -117,7 +117,7 @@ class AreaController extends BaseController{
             ));
         }catch(\Exception $e){
             $this->container->get('logger')->error(sprintf($e->getMessage()));
-            return $this->errorResponse('Read area failed, Please try again later', HttpStatusHelper::HTTP_PRECONDITION_FAILED);
+            return $this->errorResponse('Read area failed, Please try again later. '.$e->getMessage(), HttpStatusHelper::HTTP_PRECONDITION_FAILED);
         }
     }
 
@@ -173,7 +173,7 @@ class AreaController extends BaseController{
             return $this->successResponse($areaManager->serialize($newArea), HttpStatusHelper::HTTP_ACCEPTED);
         }catch(\Exception $e){
             $this->container->get('logger')->error(sprintf($e->getMessage()));
-            return $this->errorResponse('Update area failed, Please try again later', HttpStatusHelper::HTTP_PRECONDITION_FAILED);
+            return $this->errorResponse('Update area failed, Please try again later. '.$e->getMessage(), HttpStatusHelper::HTTP_PRECONDITION_FAILED);
         }
     }
 
@@ -206,7 +206,7 @@ class AreaController extends BaseController{
             return $this->successResponse(array(), HttpStatusHelper::HTTP_NO_CONTENT);
         }catch(\Exception $e){
             $this->container->get('logger')->error(sprintf($e->getMessage()));
-            return $this->errorResponse('Delete area failed, Please try again later', HttpStatusHelper::HTTP_PRECONDITION_FAILED);
+            return $this->errorResponse('Delete area failed, Please try again later. '.$e->getMessage(), HttpStatusHelper::HTTP_PRECONDITION_FAILED);
         }
     }
 }
