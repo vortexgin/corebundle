@@ -68,7 +68,6 @@ final class UserManager extends Manager {
     protected function generateQuery($filter){
         $queryBuilder = $this->repository->createQueryBuilder('er');
         $queryBuilder->where('er.enabled = 1');
-        $queryBuilder->andWhere('er.locked != 1');
 
         return $this->generateFilter($queryBuilder, $filter);
     }
