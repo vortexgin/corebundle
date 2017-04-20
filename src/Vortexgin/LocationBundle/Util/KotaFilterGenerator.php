@@ -10,14 +10,14 @@ class KotaFilterGenerator implements FilterGeneratorInterface{
       try{
         $filter = array();
 
-        if(Validator::validate($get, 'query', null, 'empty')){
-            if(Validator::validate($get, 'fields', null, 'empty')){
-                $fields = json_decode($get['fields'], true);
+        if(Validator::validate($param, 'query', null, 'empty')){
+            if(Validator::validate($param, 'fields', null, 'empty')){
+                $fields = json_decode($param['fields'], true);
                 foreach($fields as $field){
-                    $get[$field] = $get['query'];
+                    $param[$field] = $param['query'];
                 }
             }else{
-                $get['name'] = $get['query'];
+                $param['name'] = $param['query'];
             }
         }
 

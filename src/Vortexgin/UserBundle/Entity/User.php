@@ -52,5 +52,25 @@ class User extends BaseUser{
     public function getToken() {
         return $this->token;
     }
+
+    /**
+     * @param string|null $salt
+     */
+    public function setSalt($salt)
+    {
+        // TODO: Implement setSalt() method.
+    }
+
+    /**
+     * Sets the locking status of the user.
+     *
+     * @param boolean $boolean
+     *
+     * @return self
+     */
+    public function setLocked($boolean)
+    {
+        // TODO: Implement setLocked() method.
+    }
 }
 ?>
