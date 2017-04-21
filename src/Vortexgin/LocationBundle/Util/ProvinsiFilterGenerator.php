@@ -21,12 +21,12 @@ class ProvinsiFilterGenerator implements FilterGeneratorInterface{
             }
         }
 
-        if(Validator::validate($get, 'id', null, 'empty'))
-            $filter[] = array('id', $get['id']);
-        if(Validator::validate($get, 'code', null, 'empty'))
-            $filter[] = array('code', $get['code']);
-        if(Validator::validate($get, 'name', null, 'empty'))
-            $filter[] = array('name', $get['name'], 'like');
+        if(Validator::validate($param, 'id', null, 'empty'))
+            $filter[] = array('id', $param['id']);
+        if(Validator::validate($param, 'code', null, 'empty'))
+            $filter[] = array('code', $param['code']);
+        if(Validator::validate($param, 'name', null, 'empty'))
+            $filter[] = array('name', $param['name'], 'like');
         if(Validator::validate($param, 'term', null, 'empty')){
             $filter[] = array('name', $param['term'], 'like');
         }
