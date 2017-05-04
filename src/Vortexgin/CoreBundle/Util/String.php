@@ -177,6 +177,7 @@ class String
 
     public function excerpt($str, $startPos = 0, $maxLength = 100)
     {
+        $str = strip_tags($str);
         if (strlen($str) > $maxLength) {
             $excerpt = substr($str, $startPos, $maxLength - 3);
             $lastSpace = strrpos($excerpt, ' ');

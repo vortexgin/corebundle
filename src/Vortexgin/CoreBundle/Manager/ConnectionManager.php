@@ -7,7 +7,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Psr7\Stream as Psr7Stream;
 use GuzzleHttp\Psr7\Response as Psr7Response;
-use Vortexgin\CoreBundle\Util\JsonUtil;
+use Vortexgin\CoreBundle\Util\String;
 
 class ConnectionManager{
 
@@ -48,7 +48,7 @@ class ConnectionManager{
           }
         }
         
-        if($toArray === true && JsonUtil::isJson($content)){
+        if($toArray === true && String::isJson($content)){
           return json_decode($content, true);
         }
 
