@@ -110,6 +110,9 @@ class String
         if (!is_string($value)) {
             return false;
         }
+        if (empty($value)) {
+            return false;
+        }
 
         // Serialized false, return true. unserialize() returns false on an
         // invalid string or it could return false if the string is serialized
