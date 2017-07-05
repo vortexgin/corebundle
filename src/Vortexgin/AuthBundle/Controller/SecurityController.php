@@ -1,6 +1,6 @@
 <?php
 
-namespace Vortexgin\AdminBundle\Controller;
+namespace Vortexgin\AuthBundle\Controller;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use FOS\UserBundle\Controller\SecurityController as BaseController;
@@ -14,7 +14,7 @@ class SecurityController extends BaseController{
         $masterRequest = $requestStack->getMasterRequest(); // this is the call that breaks ESI
         if ($masterRequest) {
             if($masterRequest->attributes->get('_route') == 'admin_login'){
-                $template = 'VortexginAdminBundle:Security:login.html.twig';
+                $template = 'VortexginAuthBundle:Security:login.html.twig';
             }
         }
 
