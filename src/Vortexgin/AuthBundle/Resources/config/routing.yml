@@ -1,11 +1,11 @@
 admin_login:
-    pattern:  /login
+    pattern:  /adminLogin
     defaults: { _controller: VortexginAuthBundle:Security:login }
 admin_login_check:
-    pattern:  /login_check
+    pattern:  /adminLoginCheck
     defaults: { _controller: VortexginAuthBundle:Security:check }
 admin_logout:
-    pattern:  /logout
+    pattern:  /adminLogout
     defaults: { _controller: VortexginAuthBundle:Security:logout }
     
 vortexgin_auth_login:
