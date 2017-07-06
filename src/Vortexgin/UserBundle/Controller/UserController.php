@@ -42,7 +42,8 @@ class UserController extends BaseController{
             /** @var $fosUserManager \FOS\UserBundle\Model\UserManagerInterface */
             $fosUserManager = $this->container->get('fos_user.user_manager');
             /** @var $userManager \Vortexgin\UserBundle\Manager\UserManager */
-            $userManager = $this->container->get('vortexgin.user.manager.user');
+            //$userManager = $this->container->get('vortexgin.user.manager.user');
+            $userManager = $this->container->get($this->container->getParameter('vortexgin.user.user_manager'));
 
             // request validation
             if(!Validator::validate($post, 'email', null, 'empty', 'FILTER_EMAIL'))
@@ -111,7 +112,8 @@ class UserController extends BaseController{
             $get = $request->query->all();
 
             /** @var $userManager \Vortexgin\UserBundle\Manager\UserManager */
-            $userManager = $this->container->get('vortexgin.user.manager.user');
+//            $userManager = $this->container->get('vortexgin.user.manager.user');
+            $userManager = $this->container->get($this->container->getParameter('vortexgin.user.user_manager'));
 
             $filter = UserFilterGenerator::generateFilter($get);
 
@@ -167,7 +169,8 @@ class UserController extends BaseController{
             /** @var $fosUserManager \FOS\UserBundle\Model\UserManagerInterface */
             $fosUserManager = $this->container->get('fos_user.user_manager');
             /** @var $userManager \Vortexgin\UserBundle\Manager\UserManager */
-            $userManager = $this->container->get('vortexgin.user.manager.user');
+//            $userManager = $this->container->get('vortexgin.user.manager.user');
+            $userManager = $this->container->get($this->container->getParameter('vortexgin.user.user_manager'));
 
             $detail = $userManager->get(array(array('id', $id)));
             if(!$detail)
@@ -236,7 +239,8 @@ class UserController extends BaseController{
             /** @var $fosUserManager \FOS\UserBundle\Model\UserManagerInterface */
             $fosUserManager = $this->container->get('fos_user.user_manager');
             /** @var $userManager \Vortexgin\UserBundle\Manager\UserManager */
-            $userManager = $this->container->get('vortexgin.user.manager.user');
+//            $userManager = $this->container->get('vortexgin.user.manager.user');
+            $userManager = $this->container->get($this->container->getParameter('vortexgin.user.user_manager'));
 
             $detail = $userManager->get(array(array('id', $id)));
             if(!$detail)

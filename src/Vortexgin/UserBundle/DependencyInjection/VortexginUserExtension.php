@@ -22,6 +22,8 @@ class VortexginUserExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
         $container->setParameter('vortexgin.user.user_class',   $config['user_class']);
+        $container->setParameter('vortexgin.user.user_document',   $config['user_document']);
+        $container->setParameter('vortexgin.user.user_manager',   $config['user_manager']);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');

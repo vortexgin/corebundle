@@ -1,2 +1,3 @@
 vortexgin_user:
     user_class: Vortexgin\UserBundle\Entity\User
+    user_document: Vortexgin\UserBundle\Document\User

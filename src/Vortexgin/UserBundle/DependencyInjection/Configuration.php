@@ -28,6 +28,12 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('user_class')
                     ->isRequired()
                 ->end()
+                ->scalarNode('user_document')
+                    ->isRequired()
+                ->end()
+                ->scalarNode('user_manager')
+                    ->isRequired()
+                ->end()
             ->end()
         ;
 
