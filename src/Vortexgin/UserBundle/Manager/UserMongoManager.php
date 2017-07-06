@@ -66,8 +66,7 @@ final class UserMongoManager extends Manager {
 
     protected function generateQuery($filter){
         $queryBuilder = $this->repository->createQueryBuilder('er');
-        $queryBuilder ->field('enabled')->equals(true)
-                      ->field('locked')->equals(false);
+        $queryBuilder ->field('enabled')->equals(true);
 
         return $this->generateFilter($queryBuilder, $filter);
     }
