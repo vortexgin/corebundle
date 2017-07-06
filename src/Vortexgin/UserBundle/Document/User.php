@@ -1,6 +1,6 @@
 <?php
 
-namespace DS\UserBundle\Document;
+namespace Vortexgin\UserBundle\Document;
 
 use FOS\UserBundle\Model\User as BaseUser;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -32,7 +32,7 @@ class User extends BaseUser
      * @MongoDB\Field(type="string")
      * @Assert\Blank()
      */
-    protected $telegramId;
+    protected $settings;
 
     /**
      * Set token
@@ -73,6 +73,24 @@ class User extends BaseUser
     public function getTelegramId()
     {
         return $this->telegramId;
+    }
+
+    /**
+     * @param string $settings
+     */
+    public function setSettings($settings)
+    {
+        $this->settings = $settings;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSettings()
+    {
+        return $this->settings;
     }
 
     /**

@@ -1,12 +1,13 @@
 <?php
 
-namespace Vprtexgin\UserBundle\Manager;
+namespace Vortexgin\UserBundle\Manager;
 
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Vortexgin\CoreBundle\Manager\MongoManager as Manager;
 use Vortexgin\UserBundle\Document\User;
+use Vortexgin\CoreBundle\Util\String;
 
 final class UserMongoManager extends Manager {
     /**
@@ -55,9 +56,9 @@ final class UserMongoManager extends Manager {
 
         return array(
             'id'          => $object->getId(),
-            'telegram_id' => $object->getTelegramId(),
             'username'    => $object->getUsername(),
             'email'       => $object->getEmail(),
+            'settings'    => String::isJson($object->getSettings())?json_decode($object->getSettings(), true):$object->getSettings(),
             'roles'       => $object->getRoles(),
             'last_login'  => $object->getLastLogin()?$object->getLastLogin()->format('Y-m-d h:i:s'):null,
         );
@@ -100,8 +101,8 @@ final class UserMongoManager extends Manager {
                 ->setEnabled(true)
             ;
 
-            if(array_key_exists('telegram_id', $param) && !empty($param['telegram_id']))
-                $obj->setTelegramId($param['telegram_id']);
+            if(array_key_exists('settings', $param) && is_array($param['settings']))
+                $obj->setSettings(json_encode($param['settings']));
 
             $this->manager->persist($obj);
             $this->manager->flush();
@@ -115,8 +116,8 @@ final class UserMongoManager extends Manager {
 
     public function update(User $obj, $param){
         try {
-            if(array_key_exists('telegram_id', $param) && !empty($param['telegram_id']))
-                $obj->setTelegramId($param['telegram_id']);
+            if(array_key_exists('settings', $param) && is_array($param['settings']))
+                $obj->setSettings(json_encode($param['settings']));
             if(array_key_exists('email', $param) && !empty($param['email']))
                 $obj->setEmail($param['email']);
             if(array_key_exists('username', $param) && !empty($param['username']))
