@@ -418,6 +418,7 @@ abstract class Manager
                           case 'notin' :$queryBuilder->$annotation("{$field} NOT IN (:valueNotIn{$index})")->setParameter("valueNotIn{$index}", $value[1]);break;
                           case 'in' :$queryBuilder->$annotation("{$field} IN (:valueIn{$index})")->setParameter("valueIn{$index}", $value[1]);break;
                           case 'notequal' :$queryBuilder->$annotation("{$field} <> :valueNoEqual{$index}")->setParameter("valueNoEqual{$index}", $value[1]);break;
+                          case 'regexp' :$queryBuilder->$annotation("REGEXP({$field}, :valueRegexp{$index}) = true")->setParameter("valueRegexp{$index}", $value[1]);break;
                           default:$queryBuilder->$annotation("{$field} = :valueEqual{$index}")->setParameter("valueEqual{$index}", $value[1]);break;
                         }
                     }

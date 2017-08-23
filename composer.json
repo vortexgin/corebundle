@@ -13,6 +13,7 @@
         "doctrine/orm": "^2.4.8",
         "doctrine/mongodb-odm": "~1.0",
         "doctrine/mongodb-odm-bundle": "~3.0",
+        "beberlei/DoctrineExtensions": "0.3.x-dev",
         "friendsofsymfony/user-bundle": "~2.0@dev",
         "nelmio/api-doc-bundle": "^2.4",
         "nelmio/cors-bundle": "^1.4",
