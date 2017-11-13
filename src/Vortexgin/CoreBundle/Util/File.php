@@ -40,7 +40,7 @@ class File
         // audio/video
         'mp3' => 'audio/mpeg',
         'qt' => 'video/quicktime',
-        'mov' => 'video/quicktime', 
+        'mov' => 'video/quicktime',
         'mp4' => 'video/mp4',
 
         // adobe
@@ -94,29 +94,34 @@ class File
      */
     static public function uploadBase64File($base64, $path)
     {
-          $exp1 = explode(';', $base64);
-          if(!array_key_exists('1', $exp1))
-              return false;
-          $exp2 = explode(':', $exp1[0]);
-          if(!array_key_exists('1', $exp2))
-              return false;
-          $exp3 = explode('base64,', $exp1[1]);
-          if(!array_key_exists('1', $exp3))
-              return false;
+        try {
+            $exp1 = explode(';', $base64);
+            if(!array_key_exists('1', $exp1))
+                return false;
+            $exp2 = explode(':', $exp1[0]);
+            if(!array_key_exists('1', $exp2))
+                return false;
+            $exp3 = explode('base64,', $exp1[1]);
+            if(!array_key_exists('1', $exp3))
+                return false;
 
-        $ext = array_search($exp2[1], self::$_mimeType);
-        if (!$ext) {
+            $raw = $exp3[1];
+            $ext = array_search($exp2[1], self::$_mimeType);
+            if (!$ext) {
+                return false;
+            }
+
+            $filename = date('YmdGis').str_replace(' ', '', microtime()).'.'.$ext;
+            $targetFile = $path.$filename;
+
+            if (!file_put_contents($targetFile, \base64_decode($raw), FILE_BINARY)) {
+                return false;
+            }
+
+            return $filename;
+        } catch(\Exception $e) {
             return false;
         }
-
-        $filename = date('YmdGis').str_replace(' ', '', microtime()).'.'.$ext;
-        $targetFile = $path.$filename;
-
-        if (!file_put_contents($targetFile, \base64_decode($base64))) {
-            return false;
-        }
-
-        return $filename;
     }
 }
 ?>
