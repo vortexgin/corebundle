@@ -7,6 +7,8 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Psr7\Stream as Psr7Stream;
 use GuzzleHttp\Psr7\Response as Psr7Response;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\BadResponseException;
 use Vortexgin\CoreBundle\Util\StringUtils;
 
 class ConnectionManager{
@@ -70,7 +72,34 @@ class ConnectionManager{
         }
 
         return $response;
-    }catch(\Exception $e){
+      } catch (BadResponseException $e) {
+        $content = $e->getResponse()->getBody();
+        if ($e->getResponse()->getBody() instanceof Stream) {
+            $content = $e->getResponse()->getBody()->getContents();
+        }
+        if ($toArray === true && JsonUtil::isJson($content)) {
+            return json_decode($content, true);
+        }
+
+        $response = new JsonResponse();
+        $response->setData(json_decode($content));
+        $response->setStatusCode($e->getResponse()->getStatusCode());
+        $headers = [
+            'Server' => 'Apache/2.4.9 (Unix) PHP/5.5.14 OpenSSL/0.9.8za',
+            'X-Powered-By' => 'PHP/5.5.14',
+            'Access-Control-Allow-Origin' => '*',
+            'Access-Control-Allow-Credentials' => true,
+            'Cache-Control' => 'no-cache',
+            'X-Debug-Token' => '959f63',
+            'X-Debug-Token-Link' => '/_profiler/959f63',
+            'Content-Type' => 'application/json',
+        ];
+        foreach ($headers as $header => $headerValue) {
+            $response->headers->set($header, $headerValue);
+        }
+
+        return $response;
+      }catch(\Exception $e){
       return false;
     }
   }
