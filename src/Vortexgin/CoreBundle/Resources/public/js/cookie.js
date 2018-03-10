@@ -33,6 +33,6 @@ var Cookie = {
     },
     Delete: function(key, path){
         var path = path || '/';
-        Cookie.Create(key, "", path, -1);
+        Cookie.Create(key, "", path, -1); 
     }
 };
