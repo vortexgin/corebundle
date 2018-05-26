@@ -37,8 +37,8 @@ Date.prototype.customFormat = function (format) {
         time = this.getFullYear() + '-' + ((this.getMonth() + 1 < 10) ? '0' : '') + (this.getMonth() + 1) +
             '-' + ((this.getDate() < 10) ? '0' : '') + this.getDate() + 
             ' ' + ((this.getHours() < 10) ? '0' : '') + this.getHours() + 
-            '-' + ((this.getMinutes() < 10) ? '0' : '') + this.getMinutes() + 
-            '-' + ((this.getSeconds() < 10) ? '0' : '') + this.getSeconds();
+            ':' + ((this.getMinutes() < 10) ? '0' : '') + this.getMinutes() + 
+            ':' + ((this.getSeconds() < 10) ? '0' : '') + this.getSeconds();
     } else if (format == 'dayofmonth') {
         time = this.getFullYear() +
             '-' + ((this.getMonth() + 1 < 10) ? '0' : '') + (this.getMonth() + 1) +
