@@ -1,9 +1,0 @@
-services:
-    vortexgin.core.manager.redis:
-        class: Vortexgin\CoreBundle\Manager\RedisManager
-        arguments:
-            - @service_container
-    vortexgin.twig.ds_extension:
-        class: Vortexgin\CoreBundle\Twig\VortexginExtension
-        tags:
-            - { name: twig.extension }

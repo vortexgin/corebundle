@@ -1,4 +1,0 @@
-vortexgin_auth:
-    oauth:
-        client_class: Vortexgin\AuthBundle\Entity\OAuthClient
-        token_class: Vortexgin\AuthBundle\Entity\OAuthToken

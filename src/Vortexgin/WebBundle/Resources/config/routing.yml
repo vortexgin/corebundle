@@ -1,0 +1,3 @@
+vortexgin_web_bridge:
+    path:     /bridge/{token}
+    defaults: { _controller: VortexginWebBundle:Bridge:api, token: "" }
