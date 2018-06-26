@@ -16,6 +16,7 @@
         "symfony/orm-pack": "^1.0",
         "symfony/serializer": "^4.1",
         "symfony/yaml": "^4.1",
+        "symfony/property-access": "^3.4|^4.0",
         "nelmio/api-doc-bundle": "3.*",
         "predis/predis": "^1.1",
         "snc/redis-bundle": "3.*",
