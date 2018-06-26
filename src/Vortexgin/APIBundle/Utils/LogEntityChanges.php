@@ -80,7 +80,7 @@ class LogEntityChanges
             }
 
             return true;
-        } catch (\Exception $ex) {
+        } catch (\Exception $e) {
             throw new \InvalidArgumentException('Logging Error. '.$e->getMessage(), 500);
         }
     }    

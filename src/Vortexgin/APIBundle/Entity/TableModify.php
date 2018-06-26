@@ -9,7 +9,7 @@ use Vortexgin\LibraryBundle\Entity\Base;
  * TableModify.
  *
  * @category Entity
- * @package  Vortexgin\LibraryBundle\Entity
+ * @package  Vortexgin\APIBundle\Entity
  * @author   vortexgin <vortexgin@gmail.com>
  * @license  Apache 2.0
  * @link     https://github.com/vortexgin/corebundle

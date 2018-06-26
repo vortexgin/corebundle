@@ -2,6 +2,12 @@
 
 namespace Vortexgin\LibraryBundle\Utils;
 
+use Doctrine\ORM\EntityManager;
+use Symfony\Bridge\Doctrine\PropertyInfo\DoctrineExtractor;
+use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
+use Vortexgin\LibraryBundle\Model\EntityInterface;
+
+
 /**
  * Validation utilization functions
  * 
@@ -15,6 +21,25 @@ class Validator
 {
 
     /**
+     * Entity manager
+     * 
+     * @var \Doctrine\ORM\EntityManager
+     */
+    private $_em;
+
+    /**
+     * Construct
+     * 
+     * @param \Doctrine\ORM\EntityManager $entityManager Entity Manager
+     * 
+     * @return void
+     */
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->_em = $entityManager;
+    }
+
+    /**
      * Function to validate input user
      *
      * @param array  $input  Array input
@@ -26,7 +51,8 @@ class Validator
      * 
      * @return boolean
      */
-    static public function validate(array $input, $key, $is = null, $not = 'null', $filter = null, $regExp = null){
+    static public function validate(array $input, $key, $is = null, $not = 'null', $filter = null, $regExp = null)
+    {
         if(!is_array($input))
           return false;
         if(!array_key_exists($key, $input))
@@ -102,5 +128,75 @@ class Validator
         }
 
         return true;
+    }
+
+    /**
+     * Function to validate entity
+     * 
+     * @param object $class  Class entity
+     * @param array  $params Parameter
+     * 
+     * @return boolean
+     */
+    public function entity($class, $params)
+    {
+        try {
+            $phpDocExtractor = new PhpDocExtractor();
+            $doctrineExtractor = new DoctrineExtractor($this->_em->getMetadataFactory());
+    
+            $properties = $doctrineExtractor->getProperties($class);
+            foreach ($properties as $property) {
+                if (in_array($property, ['id', 'isActive', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy'])) {
+                    continue;
+                }
+
+                $types = $doctrineExtractor->getTypes($class, $property);
+                if (count($types) > 0) {
+                    $type = $types[0];
+                    $shortDesc = $phpDocExtractor->getShortDescription($class, $property)?:$type;
+                    
+                    if (!$type->isNullable()) {
+                        if (in_array($type->getBuiltinType(), ['string'])) {
+                            if (empty($params[$property])) {
+                                return $shortDesc.' cannot be empty';
+                            }
+                        } else {
+                            if (is_null($params[$property])) {
+                                return $shortDesc.' cannot be empty';
+                            }
+                        }
+                    }
+    
+                    if (in_array($type->getBuiltinType(), ['object'])) {
+                        if (strtolower($type->getClassName()) == 'datetime') {
+                            $validDate = \DateTime::createFromFormat('Y-m-d H:i:s', $input[$key]);
+                            if (!$validDate) {
+                                return $shortDesc.' invalid. Use this format "Y-m-d H:i:s"';
+                            }
+                            $params[$property] = $validDate;
+                        } elseif (strtolower($type->getClassName()) == 'date') {
+                            $validDate = \DateTime::createFromFormat('Y-m-d', $input[$key]);
+                            if (!$validDate) {
+                                return $shortDesc.' invalid. Use this format "Y-m-d"';
+                            }        
+                            $params[$property] = $validDate;
+                        } else {
+                            if (!$type->isNullable()) {
+                                $repo = $this->_em->getRepository($type->getClassName());
+                                $object = $repo->find($params[$property]);
+                                if (!$object) {
+                                    return $shortDesc.' not found';
+                                }
+                                $params[$property] = $object;
+                            }
+                        }
+                    }
+                }
+            }
+    
+            return $params;    
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
     }
 }

@@ -18,8 +18,9 @@ use Doctrine\ORM\QueryBuilder;
 use Vortexgin\LibraryBundle\Model\EntityInterface;
 use Vortexgin\LibraryBundle\Utils\CamelCasizer;
 use Vortexgin\LibraryBundle\Utils\HttpStatusHelper;
-use Vortexgin\LibraryBundle\Utils\Doctrine\ORM\FilterGenerator;
 use Vortexgin\LibraryBundle\Utils\Validator;
+use Vortexgin\LibraryBundle\Utils\Doctrine\ORM\FilterGenerator;
+use Vortexgin\LibraryBundle\Utils\Doctrine\ORM\EntityManipulator;
 
 /**
  * Base controller class 
@@ -179,22 +180,37 @@ class BaseController extends Controller
      * 
      * @return mixed
      */
-    protected function successResponse(array $param, $httpStatusCode = 200, array $customHeader = array(), $format = 'json') {
-        if (!Validator::validate($param, 'data', 'array', 'empty')) {
+    protected function successResponse(array $param, $httpStatusCode = 200, array $customHeader = array(), $format = 'json')
+    {
+        if (!Validator::validate($param, 'data', null, 'empty')) {
             throw new \InvalidArgumentException('Success response needs "data" child', 500);
         }
 
         $title = array();
-        foreach ($param['data'] as $key=>$value) {
-            if ($value instanceof EntityInterface) {
-                $param['data'][$key] = json_decode($this->serializer->serialize($value, 'json'), true);
+        if (is_array($param['data'])) {
+            foreach ($param['data'] as $key=>$value) {
+                if ($value instanceof EntityInterface) {
+                    $param['data'][$key] = json_decode($this->serializer->serialize($value, 'json'), true);
+                    if (strtolower($format) == 'csv') {
+                        $title = array_keys($param['data'][$key]);
+                        $row = array();
+                        foreach ($param['data'][$key] as $object) {
+                            $row[] = is_array($object) || is_object($object)?'[Object]':$object;
+                        }
+                        $param['data'][$key] = $row;
+                    }
+                }
+            }    
+        } else {
+            if ($param['data'] instanceof EntityInterface) {
+                $param['data'] = json_decode($this->serializer->serialize($param['data'], 'json'), true);
                 if (strtolower($format) == 'csv') {
-                    $title = array_keys($param['data'][$key]);
+                    $title = array();
                     $row = array();
-                    foreach ($param['data'][$key] as $object) {
+                    foreach ($param['data'] as $object) {
                         $row[] = is_array($object) || is_object($object)?'[Object]':$object;
                     }
-                    $param['data'][$key] = $row;
+                    $param['data'] = $row;
                 }
             }
         }
@@ -296,7 +312,9 @@ class BaseController extends Controller
 
             $format = Validator::validate($get, '_format', null, 'empty')?$get['_format']:'json';
 
-            $object = $this->repo->find($id);
+            $entityManipulator = new EntityManipulator($this->em, $this->class);
+            $object = $entityManipulator->find($id);
+
             if (!$object) {
                 return $this->errorResponse($this->class.' not found', HttpStatusHelper::HTTP_NOT_FOUND);
             }
@@ -336,15 +354,16 @@ class BaseController extends Controller
                 $object = $this->repo->find($post['id']);
             }
 
-            if (Validator::validate($post, 'params', 'array', 'empty')) {
-                foreach ($post['params'] as $key=>$value) {
-                    $method = 'set'.ucfirst(CamelCasizer::underScoreToCamelCase($key));
-                    $object->$method($value);
-                }
+            $validator = new Validator($this->em);
+            $post['params'] = $validator->entity($this->class, $post['params']);
+            if (!is_array($post['params'])) {
+                return $this->errorResponse($validate, HttpStatusHelper::HTTP_BAD_REQUEST);
             }
 
-            $this->em->persist($object);
-            $this->em->flush();
+            if (Validator::validate($post, 'params', 'array', 'empty')) {
+                $entityManipulator = new EntityManipulator($this->em, $object);
+                $entityManipulator->save($post['params']);
+            }
 
             return $this->successResponse(
                 array(
@@ -381,11 +400,13 @@ class BaseController extends Controller
                 return $this->errorResponse($this->class.' not found', HttpStatusHelper::HTTP_NOT_FOUND);
             }
 
-            $this->em->remove($object);
-            $this->em->flush();
+            $entityManipulator = new EntityManipulator($this->em, $object);
+            $entityManipulator->delete();
             
             return $this->successResponse(
-                array(), 
+                array(
+                    'data' => $object,
+                ), 
                 HttpStatusHelper::HTTP_NO_CONTENT, 
                 array(), 
                 $format

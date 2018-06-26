@@ -53,7 +53,7 @@ class EntityManipulator extends CacheManipulator
         $this->_repo = $entityManager->getRepository($reflectionClass->getName());
         $this->_entity = $object;
 
-        parent::_construct($entityManager);
+        parent::__construct($entityManager);
     }
 
     /**
@@ -97,7 +97,7 @@ class EntityManipulator extends CacheManipulator
             }
         }
 
-        return $object;
+        return $this->_entity;
     }
 
     /**
@@ -118,6 +118,42 @@ class EntityManipulator extends CacheManipulator
     }
 
     /**
+     * Function to save data into object entity
+     * 
+     * @param array $data Array of data
+     * 
+     * @return mixed
+     */
+    public function save(array $data = array())
+    {
+        $this->bindData($data);
+
+        $this->_entity->setUpdatedAt(new \DateTime());
+        $this->_entity->setUpdatedBy('Anon.');
+
+        if (!$this->_entity->getId()) {
+            $this->_entity->setCreatedAt(new \DateTime());
+            $this->_entity->setCreatedBy('Anon.');
+        } else {
+            $logManager = new LogEntityChanges($this->_em);
+            //$logManager->log($this->_entity, 'Anon.');
+        }
+
+        $this->commit();
+    }
+
+    /**
+     * Function to delete object entity
+     * 
+     * @return mixed
+     */    
+    public function delete()
+    {
+        $this->_entity->setIsActive(false);
+        $this->save();
+    }
+
+    /**
      * Function to find data by id
      * 
      * @param string $id ID of entity
@@ -130,7 +166,7 @@ class EntityManipulator extends CacheManipulator
         $object = $this->fetchFromCache($cacheId);
 
         if (!$object) {
-            $object = $this->repository->find($id);
+            $object = $this->_repo->find($id);
             $this->saveCache($cacheId, $object);
         }
 
@@ -150,7 +186,7 @@ class EntityManipulator extends CacheManipulator
         $result = $this->fetchFromCache($cacheId);
 
         if (!$result) {
-            $queryBuilder = $this->repository->createQueryBuilder('o');
+            $queryBuilder = $this->_repo->createQueryBuilder('o');
             $queryBuilder->andWhere($queryBuilder->expr()->eq('o.id', $id));
             $result = $this->getOneOrNullResult(Query::HYDRATE_ARRAY);
 
@@ -169,7 +205,7 @@ class EntityManipulator extends CacheManipulator
      */
     public function findBy(array $criteria)
     {
-        $object = $this->repository->findOneBy($criteria);
+        $object = $this->_repo->findOneBy($criteria);
         if ($object) {
             $cacheId = sprintf('%s_%s', $this->getEntityShortName(), $object->getId());
             $this->saveCache($cacheId, $object);
@@ -187,51 +223,12 @@ class EntityManipulator extends CacheManipulator
      */
     public function findByArray(array $criteria)
     {
-        $queryBuilder = $this->repository->createQueryBuilder('o');
+        $queryBuilder = $this->_repo->createQueryBuilder('o');
         foreach ($criteria as $key => $value) {
             $queryBuilder->andWhere($queryBuilder->expr()->eq(sprintf('o.%s', $key), sprintf(':%s', $key)));
             $queryBuilder->setParameter($key, $value);
         }
 
         return $this->getResult($queryBuilder, Query::HYDRATE_ARRAY);
-    }
-
-    /**
-     * Function to save data into object entity
-     * 
-     * @param object $object Object Entity
-     * @param array  $data   Array of data
-     * 
-     * @return mixed
-     */
-    public function save($object, array $data = array())
-    {
-        $this->bindData($object, $data);
-
-        $object->setUpdatedAt(new \DateTime());
-        $object->setUpdatedBy($this->getUser());
-
-        if (!$object->getId()) {
-            $object->setCreatedAt(new \DateTime());
-            $object->setCreatedBy($this->getUser());
-        } else {
-            $logManager = new LogEntityChanges($this->_em);
-            $logManager->log($object, $this->getUser());
-        }
-
-        $this->commit($object);
-    }
-
-    /**
-     * Function to delete object entity
-     * 
-     * @param object $object Object Entity
-     * 
-     * @return mixed
-     */    
-    public function delete($object)
-    {
-        $object->setIsActive(false);
-        $this->save($object);
     }
 }

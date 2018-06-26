@@ -4,6 +4,7 @@ namespace Vortexgin\LibraryBundle\Utils\Doctrine\ORM;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\Common\Cache\Cache;
+use Doctrine\Common\Cache\ArrayCache;
 
 /**
  * Cache manipulator functions
