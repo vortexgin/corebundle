@@ -134,7 +134,7 @@ class BaseController extends Controller
      * @param array  $customHeader   Custom http header
      * @param string $format         Response format
      * 
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @return mixed
      */
     protected function errorResponse($userMessage, $httpStatusCode = 400, array $customHeader = array(), $format = 'json')
     {
@@ -145,12 +145,28 @@ class BaseController extends Controller
         );
 
         switch ($format) {
+        case 'yaml':
+            $response = new Response(
+                Yaml::dump($param),
+                $httpStatusCode,
+                $customHeader
+            );
+            break;
+        case 'csv':
+            $customHeader['content-type'] = 'text/csv';
+            $response = new Response($this->serializer->serialize($param, 'csv'), $httpStatusCode, $customHeader);
+            break;
+        case 'xml':
+            $customHeader['content-type'] = 'text/xml';
+            $response = new Response($this->serializer->serialize($param, 'xml'), $httpStatusCode, $customHeader);
+            break;
         default :
-            $return = new JsonResponse($content, $httpStatusCode, $customHeader);
+            $customHeader['content-type'] = 'text/yaml';
+            $response = new JsonResponse($content, $httpStatusCode, $customHeader);
             break;
         }
 
-        return $return;
+        return $response;
     }
 
     /**
@@ -161,28 +177,50 @@ class BaseController extends Controller
      * @param array  $customHeader   Custom http header
      * @param string $format         Response format
      * 
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @return mixed
      */
     protected function successResponse(array $param, $httpStatusCode = 200, array $customHeader = array(), $format = 'json') {
         if (!Validator::validate($param, 'data', 'array', 'empty')) {
             throw new \InvalidArgumentException('Success response needs "data" child', 500);
         }
-        
+
+        $title = array();
         foreach ($param['data'] as $key=>$value) {
             if ($value instanceof EntityInterface) {
-                $param['data'][$key] = $this->serializer->serialize($value);
+                $param['data'][$key] = json_decode($this->serializer->serialize($value, 'json'), true);
+                if (strtolower($format) == 'csv') {
+                    $title = array_keys($param['data'][$key]);
+                    $row = array();
+                    foreach ($param['data'][$key] as $object) {
+                        $row[] = is_array($object) || is_object($object)?'[Object]':$object;
+                    }
+                    $param['data'][$key] = $row;
+                }
             }
         }
         $param['timestamp'] = $this->timeInit;
         $param['success'] = true;
 
         switch ($format) {
+        case 'yaml':
+            $customHeader['content-type'] = 'text/yaml';
+            $response = new Response(Yaml::dump($param), $httpStatusCode, $customHeader);
+            break;
+        case 'csv':
+            $customHeader['content-type'] = 'text/csv';
+            array_unshift($param['data'], $title);
+            $response = new Response($this->serializer->serialize($param['data'], 'csv'), $httpStatusCode, $customHeader);
+            break;
+        case 'xml':
+            $customHeader['content-type'] = 'text/xml';
+            $response = new Response($this->serializer->serialize($param, 'xml'), $httpStatusCode, $customHeader);
+            break;
         default:
-            $return = new JsonResponse($param, $httpStatusCode, $customHeader);
+            $response = new JsonResponse($param, $httpStatusCode, $customHeader);
             break;
         }
 
-        return $return;
+        return $response;
     }
 
     /**
