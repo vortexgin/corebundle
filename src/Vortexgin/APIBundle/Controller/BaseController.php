@@ -178,7 +178,7 @@ class BaseController extends Controller
     {
         try {
             $get = $request->query->all();
-            $this->init($class);
+            $this->init($this->container->getParameter($class));
 
             $orderBy = Validator::validate($get, 'order_by', null, 'empty')?$get['order_by']:'id';
             $orderSort = Validator::validate($get, 'order_sort', null, 'empty')?$get['order_sort']:'DESC';
@@ -217,7 +217,7 @@ class BaseController extends Controller
     {
         try {
             $get = $request->query->all();
-            $this->init($class);
+            $this->init($this->container->getParameter($class));
 
             $object = $this->repo->find($id);
             if (!$object) {
@@ -242,7 +242,7 @@ class BaseController extends Controller
     {
         try {
             $post = $request->request->all();
-            $this->init($class);
+            $this->init($this->container->getParameter($class));
 
             $object = $this->createNew();
             if (Validator::validate($post, 'id', null, 'empty')) {
@@ -278,7 +278,7 @@ class BaseController extends Controller
     {
         try {
             $get = $request->query->all();
-            $this->init($class);
+            $this->init($this->container->getParameter($class));
 
             $object = $this->repo->find($id);
             if (!$object) {
