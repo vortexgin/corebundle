@@ -3,6 +3,7 @@
 namespace Vortexgin\APIBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Vortexgin\LibraryBundle\Entity\Base;
 
 /**
  * TableModify.

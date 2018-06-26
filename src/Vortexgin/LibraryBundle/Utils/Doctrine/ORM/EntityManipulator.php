@@ -4,6 +4,7 @@ namespace Vortexgin\LibraryBundle\Utils\Doctrine\ORM;
 
 use Doctrine\ORM\EntityManager;
 use Vortexgin\LibraryBundle\Utils\CamelCasizer;
+use Vortexgin\APIBundle\Utils\LogEntityChanges;
 
 /**
  * Entity manipulator functions
@@ -214,7 +215,8 @@ class EntityManipulator extends CacheManipulator
             $object->setCreatedAt(new \DateTime());
             $object->setCreatedBy($this->getUser());
         } else {
-            //$this->logModified($object, $this->getUser());
+            $logManager = new LogEntityChanges($this->_em);
+            $logManager->log($object, $this->getUser());
         }
 
         $this->commit($object);
