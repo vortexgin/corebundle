@@ -34,7 +34,7 @@ class Base
      * 
      * @var boolean
      *
-     * @ORM\Column(name="is_active", type="boolean", nullable=false)
+     * @ORM\Column(name="is_active", type="boolean", nullable=false, options={"default": 1})
      */
     protected $isActive = true;
 
@@ -43,7 +43,7 @@ class Base
      * 
      * @var \DateTime
      *
-     * @ORM\Column(name="created_at", type="datetime", nullable=false)
+     * @ORM\Column(name="created_at", type="datetime", nullable=false, options={"default": "CURRENT_TIMESTAMP"})
      */
     protected $createdAt;
 
@@ -61,7 +61,7 @@ class Base
      * 
      * @var \DateTime
      *
-     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true, options={"default": "CURRENT_TIMESTAMP"})
      */
     protected $updatedAt;
 
