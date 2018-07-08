@@ -87,7 +87,7 @@ class FileUtils
         $count_explode = count($idx);
         $idx = strtolower($idx[$count_explode - 1]);
 
-        if (array_key_exists($idx, self::$_mimeType)) {
+        if (array_key_exists($idx, self::$mimeType)) {
             return self::$mimeType[$idx];
         } else {
             return 'application/octet-stream';
