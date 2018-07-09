@@ -43,7 +43,7 @@ class Mailer
      * 
      * @return void
      */
-    protected function sendEmailMessage($subject, $renderedTemplate, $fromEmail, $toEmail)
+    public function sendEmailMessage($subject, $renderedTemplate, $fromEmail, $toEmail)
     {
         if ($this->_mailer instanceof \Swift_Mailer) {
             $this->_swiftSend($subject, $renderedTemplate, $fromEmail, $toEmail);
