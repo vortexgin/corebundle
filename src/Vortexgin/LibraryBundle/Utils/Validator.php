@@ -3,6 +3,7 @@
 namespace Vortexgin\LibraryBundle\Utils;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Bridge\Doctrine\PropertyInfo\DoctrineExtractor;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
 use Vortexgin\LibraryBundle\Model\EntityInterface;
@@ -151,6 +152,7 @@ class Validator
                 }
 
                 $types = $doctrineExtractor->getTypes($class, $property);
+
                 if (count($types) > 0) {
                     $type = $types[0];
                     $shortDesc = $phpDocExtractor->getShortDescription($class, $property)?:$type;
@@ -161,8 +163,10 @@ class Validator
                                 return $shortDesc.' cannot be empty';
                             }
                         } else {
-                            if (!self::validate($params, $property, 'null', 'empty')) {
-                                return $shortDesc.' cannot be empty';
+                            if (!$type->isCollection()) {
+                                if (!self::validate($params, $property, 'null', 'empty')) {
+                                    return $shortDesc.' cannot be empty';
+                                }    
                             }
                         }
                     }
@@ -170,6 +174,7 @@ class Validator
                     if (!self::validate($params, $property, 'null', 'empty')) {
                         continue;
                     }
+
                     if (in_array($type->getBuiltinType(), ['object'])) {
                         if (strtolower($type->getClassName()) == 'datetime') {
                             $validDate = \DateTime::createFromFormat('Y-m-d H:i:s', $params[$property]);
@@ -184,13 +189,17 @@ class Validator
                             }        
                             $params[$property] = $validDate;
                         } else {
-                            if (!$type->isNullable()) {
-                                $repo = $this->_em->getRepository($type->getClassName());
-                                $object = $repo->find($params[$property]);
-                                if (!$object) {
-                                    return $shortDesc.' not found';
-                                }
-                                $params[$property] = $object;
+                            if ($type->isCollection()) {
+
+                            } else {
+                                if (!$type->isNullable()) {
+                                    $repo = $this->_em->getRepository($type->getClassName());
+                                    $object = $repo->find($params[$property]);
+                                    if (!$object) {
+                                        return $shortDesc.' not found';
+                                    }
+                                    $params[$property] = $object;
+                                }    
                             }
                         }
                     }
