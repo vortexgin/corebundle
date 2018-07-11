@@ -105,6 +105,11 @@ class BaseController extends Controller
         $encoders = array(new XmlEncoder(), new JsonEncoder(), new YamlEncoder(), new CsvEncoder());
 
         $methodNormalizer = new GetSetMethodNormalizer();
+        $methodNormalizer->setCircularReferenceHandler(
+            function ($object) {
+                return $object->getId();
+            }
+        );
         $callbackInt = function ($var) {
             return (int) $var;
         };
@@ -355,9 +360,10 @@ class BaseController extends Controller
             }
 
             $validator = new Validator($this->em);
+            $post['params'] = Validator::validate($post, 'params', null, 'empty')?$post['params']:array();
             $post['params'] = $validator->entity($this->class, $post['params']);
             if (!is_array($post['params'])) {
-                return $this->errorResponse($validate, HttpStatusHelper::HTTP_BAD_REQUEST);
+                return $this->errorResponse($post['params'], HttpStatusHelper::HTTP_BAD_REQUEST);
             }
 
             if (Validator::validate($post, 'params', 'array', 'empty')) {

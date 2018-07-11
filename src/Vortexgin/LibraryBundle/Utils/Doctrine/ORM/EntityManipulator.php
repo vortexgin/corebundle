@@ -128,12 +128,19 @@ class EntityManipulator extends CacheManipulator
     {
         $this->bindData($data);
 
-        $this->_entity->setUpdatedAt(new \DateTime());
-        $this->_entity->setUpdatedBy('Anon.');
-
+        if (method_exists($this->_entity, 'setUpdatedAt')) {
+            $this->_entity->setUpdatedAt(new \DateTime());            
+        }
+        if (method_exists($this->_entity, 'setUpdatedBy')) {
+            $this->_entity->setUpdatedBy('Anon.');            
+        }
         if (!$this->_entity->getId()) {
-            $this->_entity->setCreatedAt(new \DateTime());
-            $this->_entity->setCreatedBy('Anon.');
+            if (method_exists($this->_entity, 'setCreatedAt')) {
+                $this->_entity->setCreatedAt(new \DateTime());            
+            }
+            if (method_exists($this->_entity, 'setCreatedBy')) {
+                $this->_entity->setCreatedBy('Anon.');            
+            }
         } else {
             $logManager = new LogEntityChanges($this->_em);
             //$logManager->log($this->_entity, 'Anon.');

@@ -157,25 +157,28 @@ class Validator
                     
                     if (!$type->isNullable()) {
                         if (in_array($type->getBuiltinType(), ['string'])) {
-                            if (empty($params[$property])) {
+                            if (!self::validate($params, $property, null, 'empty')) {
                                 return $shortDesc.' cannot be empty';
                             }
                         } else {
-                            if (is_null($params[$property])) {
+                            if (!self::validate($params, $property, 'null', 'empty')) {
                                 return $shortDesc.' cannot be empty';
                             }
                         }
                     }
     
+                    if (!self::validate($params, $property, 'null', 'empty')) {
+                        continue;
+                    }
                     if (in_array($type->getBuiltinType(), ['object'])) {
                         if (strtolower($type->getClassName()) == 'datetime') {
-                            $validDate = \DateTime::createFromFormat('Y-m-d H:i:s', $input[$key]);
+                            $validDate = \DateTime::createFromFormat('Y-m-d H:i:s', $params[$property]);
                             if (!$validDate) {
                                 return $shortDesc.' invalid. Use this format "Y-m-d H:i:s"';
                             }
                             $params[$property] = $validDate;
                         } elseif (strtolower($type->getClassName()) == 'date') {
-                            $validDate = \DateTime::createFromFormat('Y-m-d', $input[$key]);
+                            $validDate = \DateTime::createFromFormat('Y-m-d', $params[$property]);
                             if (!$validDate) {
                                 return $shortDesc.' invalid. Use this format "Y-m-d"';
                             }        
