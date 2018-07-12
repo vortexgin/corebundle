@@ -51,7 +51,7 @@ class FormTokenizerManager
      */
     public function validateToken($formTokenKey)
     {
-        $data = $this->_cacheManager->getData($formTokenKey, null);
+        $data = $this->_cacheManager->getData($formTokenKey, array());
         if ($data === null) {
             return false;
         }
