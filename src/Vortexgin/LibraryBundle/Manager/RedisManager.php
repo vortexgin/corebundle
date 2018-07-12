@@ -2,7 +2,7 @@
 
 namespace Vortexgin\LibraryBundle\Manager;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Predis\Client;
 use Codeception\Lib\Driver\Redis;
 use Vortexgin\LibraryBundle\Utils\Validator;
 use Vortexgin\LibraryBundle\Utils\StringUtils;
@@ -32,50 +32,22 @@ class RedisManager
     ];
 
     /**
-     * List DB
-     * 
-     * @var array
-     */
-    private $_listDB = [
-      'snc_redis.default', 'snc_redis.session', 'snc_redis.monolog',
-      'snc_redis.cache', 'snc_redis.metadata', 'snc_redis.result',
-      'snc_redis.query', 'snc_redis.page', 'snc_redis.revive',
-      'snc_redis.ga',
-    ];
-
-    /**
-     * Default DB
-     * 
-     * @var string
-     */
-    private $_defaultDB = 'snc_redis.default';
-
-    /**
      * Redis
      * 
-     * @var \Codeception\Lib\Driver\Redis
+     * @var \Predis\Client
      */
     private $_redis;
 
     /**
-     * Container
-     * 
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface
-     */
-    private $_container;
-
-    /**
      * Construct
      * 
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container Container interface
+     * @param \Predis\Client $redis Redis client
      * 
      * @return void
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(Client $redis)
     {
-        $this->_container = $container;
-
-        $this->switchDB($this->_defaultDB);
+        $this->_redis = $redis;
     }
 
     /**
@@ -96,9 +68,6 @@ class RedisManager
                 return $this->getCache($key);
             }
         } catch (Exception $e) {
-            $this->_container->get('logger')->error($e->getMessage());
-            $this->_container->get('logger')->error($e->getTraceAsString());
-
             return false;
         }
     }
@@ -124,9 +93,6 @@ class RedisManager
                 }
             }
         } catch (Exception $e) {
-            $this->_container->get('logger')->error($e->getMessage());
-            $this->_container->get('logger')->error($e->getTraceAsString());
-
             return false;
         }
     }
@@ -152,9 +118,6 @@ class RedisManager
             $this->_redis->append($key, $value);
             $this->_redis->expire($key, $lifetime);
         } catch (Exception $e) {
-            $this->_container->get('logger')->error($e->getMessage());
-            $this->_container->get('logger')->error($e->getTraceAsString());
-
             return false;
         }
     }
@@ -174,9 +137,6 @@ class RedisManager
                 $this->_redis->expire($key, $lifetime);
             }
         } catch (Exception $e) {
-            $this->_container->get('logger')->error($e->getMessage());
-            $this->_container->get('logger')->error($e->getTraceAsString());
-
             return false;
         }
     }
@@ -193,9 +153,6 @@ class RedisManager
         try {
             return $this->_redis->keys($keyword);
         } catch (Exception $e) {
-            $this->_container->get('logger')->error($e->getMessage());
-            $this->_container->get('logger')->error($e->getTraceAsString());
-
             return false;
         }
     }
@@ -212,9 +169,6 @@ class RedisManager
         try {
             return $this->_redis->exists($key);
         } catch (Exception $e) {
-            $this->_container->get('logger')->error($e->getMessage());
-            $this->_container->get('logger')->error($e->getTraceAsString());
-
             return false;
         }
     }
@@ -237,28 +191,6 @@ class RedisManager
                 }
             }
         } catch (Exception $e) {
-            $this->_container->get('logger')->error($e->getMessage());
-            $this->_container->get('logger')->error($e->getTraceAsString());
-
-            return false;
-        }
-    }
-
-    /**
-     * Function to switch DB
-     * 
-     * @param string $db Cache DB
-     * 
-     * @return mixed
-     */
-    public function switchDB($db)
-    {
-        try {
-            if (!in_array($db, $this->_listDB))
-                return false;
-
-            $this->_redis = $this->_container->get($db);
-        } catch (Exception $e) {
             return false;
         }
     }
@@ -266,21 +198,13 @@ class RedisManager
     /**
      * Function to flush cache data on selected db
      * 
-     * @param string $db DB to flush
-     * 
      * @return mixed
      */
-    public function flushDB($db)
+    public function flushDB()
     {
         try {
-            if ($this->switchDB($db)) {
-                $this->deleteCache('*');
-                $this->switchDB($this->_defaultDB);
-            }
+            $this->deleteCache('*');
         } catch (Exception $e) {
-            $this->_container->get('logger')->error($e->getMessage());
-            $this->_container->get('logger')->error($e->getTraceAsString());
-
             return false;
         }
     }
@@ -293,15 +217,8 @@ class RedisManager
     public function flushAll()
     {
         try {
-            foreach ($this->_listDB as $db) {
-                $this->flushDB($db);
-            }
-
-            $this->switchDB($this->_defaultDB);
+            $this->flushDB();
         } catch (Exception $e) {
-            $this->_container->get('logger')->error($e->getMessage());
-            $this->_container->get('logger')->error($e->getTraceAsString());
-
             return false;
         }
     }

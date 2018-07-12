@@ -26,7 +26,6 @@ class FormTokenizerManager
     public function __construct($cacheManager) 
     {
         $this->_cacheManager = $cacheManager;
-        $this->_cacheManager->switchDB('snc_redis.result');
     }
 
     /**
