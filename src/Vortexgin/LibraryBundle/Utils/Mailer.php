@@ -66,7 +66,7 @@ class Mailer
             ->setSubject($subject)
             ->setFrom($fromEmail)
             ->setTo($toEmail)
-            ->setBody($renderedTemplate);
+            ->setBody($renderedTemplate, 'text/html');
 
         $this->_mailer->send($message);
     }
