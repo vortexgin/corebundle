@@ -212,8 +212,8 @@ class BaseController extends Controller
             }    
         } else {
             if ($param['data'] instanceof EntityInterface) {
-                if (method_exists($value, 'toArray')) {
-                    $param['data'][$key] = $value->toArray();
+                if (method_exists($param['data'], 'toArray')) {
+                    $param['data'][$key] = $param['data']->toArray();
                 } else {
                     $param['data'] = json_decode($this->serializer->serialize($param['data'], 'json'), true);
                     if (strtolower($format) == 'csv') {
