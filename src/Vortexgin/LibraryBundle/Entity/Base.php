@@ -3,6 +3,7 @@
 namespace Vortexgin\LibraryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Vortexgin\LibraryBundle\Utils\CamelCasizer;
 
 /**
  * Base Entity.
@@ -73,6 +74,37 @@ class Base
      * @ORM\Column(name="updated_by", type="string", length=100, nullable=true)
      */
     protected $updatedBy;
+
+    /**
+     * Convert entity into array
+     * 
+     * @return array
+     */
+    public function toArray()
+    {
+        $return = array();
+        $reflector = new \ReflectionClass($this);
+        $properties = $reflector->getProperties();
+        if (count($properties) > 0) {
+            foreach ($properties as $property) {
+                if (stristr($property->getDocComment(), 'ManyToOne')
+                    || stristr($property->getDocComment(), 'OneToMany')
+                ) {
+
+                } else {
+                    if (method_exists($this, CamelCasizer::underScoreToCamelCase('get'.$property->getName()))) {
+                        $method = CamelCasizer::underScoreToCamelCase('get'.$property->getName());
+                        $return[$property->getName()] = $this->$method();
+                    } elseif (method_exists($this, CamelCasizer::underScoreToCamelCase('has'.$property->getName()))) {
+                        $method = CamelCasizer::underScoreToCamelCase('has'.$property->getName());
+                        $return[$property->getName()] = $this->$method();
+                    }    
+                }
+            }
+        }
+
+        return $return;
+    }
 
     /**
      * Get id.
