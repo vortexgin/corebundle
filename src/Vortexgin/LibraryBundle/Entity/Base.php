@@ -87,10 +87,12 @@ class Base
         $properties = $reflector->getProperties();
         if (count($properties) > 0) {
             foreach ($properties as $property) {
-                if (stristr($property->getDocComment(), 'ManyToOne')
-                    || stristr($property->getDocComment(), 'OneToMany')
-                ) {
-
+                if (stristr($property->getDocComment(), 'OneToMany')) {
+                } elseif (stristr($property->getDocComment(), 'ManyToOne')) {
+                    if (method_exists($this, CamelCasizer::underScoreToCamelCase('get'.$property->getName()))) {
+                        $method = CamelCasizer::underScoreToCamelCase('get'.$property->getName());
+                        $return[$property->getName()] = $this->$method();
+                    }
                 } else {
                     if (method_exists($this, CamelCasizer::underScoreToCamelCase('get'.$property->getName()))) {
                         $method = CamelCasizer::underScoreToCamelCase('get'.$property->getName());

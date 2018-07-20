@@ -195,27 +195,35 @@ class BaseController extends Controller
         if (is_array($param['data'])) {
             foreach ($param['data'] as $key=>$value) {
                 if ($value instanceof EntityInterface) {
-                    $param['data'][$key] = json_decode($this->serializer->serialize($value, 'json'), true);
-                    if (strtolower($format) == 'csv') {
-                        $title = array_keys($param['data'][$key]);
-                        $row = array();
-                        foreach ($param['data'][$key] as $object) {
-                            $row[] = is_array($object) || is_object($object)?'[Object]':$object;
-                        }
-                        $param['data'][$key] = $row;
+                    if (method_exists($value, 'toArray')) {
+                        $param['data'][$key] = $value->toArray();
+                    } else {
+                        $param['data'][$key] = json_decode($this->serializer->serialize($value, 'json'), true);
+                        if (strtolower($format) == 'csv') {
+                            $title = array_keys($param['data'][$key]);
+                            $row = array();
+                            foreach ($param['data'][$key] as $object) {
+                                $row[] = is_array($object) || is_object($object)?'[Object]':$object;
+                            }
+                            $param['data'][$key] = $row;
+                        }    
                     }
                 }
             }    
         } else {
             if ($param['data'] instanceof EntityInterface) {
-                $param['data'] = json_decode($this->serializer->serialize($param['data'], 'json'), true);
-                if (strtolower($format) == 'csv') {
-                    $title = array();
-                    $row = array();
-                    foreach ($param['data'] as $object) {
-                        $row[] = is_array($object) || is_object($object)?'[Object]':$object;
+                if (method_exists($value, 'toArray')) {
+                    $param['data'][$key] = $value->toArray();
+                } else {
+                    $param['data'] = json_decode($this->serializer->serialize($param['data'], 'json'), true);
+                    if (strtolower($format) == 'csv') {
+                        $title = array();
+                        $row = array();
+                        foreach ($param['data'] as $object) {
+                            $row[] = is_array($object) || is_object($object)?'[Object]':$object;
+                        }
+                        $param['data'] = $row;
                     }
-                    $param['data'] = $row;
                 }
             }
         }
