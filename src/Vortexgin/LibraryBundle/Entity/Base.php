@@ -91,7 +91,9 @@ class Base
                 } elseif (stristr($property->getDocComment(), 'ManyToOne')) {
                     if (method_exists($this, CamelCasizer::underScoreToCamelCase('get'.$property->getName()))) {
                         $method = CamelCasizer::underScoreToCamelCase('get'.$property->getName());
-                        $return[$property->getName()] = $this->$method();
+                        if (method_exists($this->$method(), 'toArray')) {
+                            $return[$property->getName()] = $this->$method()->toArray();                            
+                        }
                     }
                 } else {
                     if (method_exists($this, CamelCasizer::underScoreToCamelCase('get'.$property->getName()))) {
