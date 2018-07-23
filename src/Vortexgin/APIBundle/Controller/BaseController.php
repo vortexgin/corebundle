@@ -185,7 +185,7 @@ class BaseController extends Controller
      * 
      * @return mixed
      */
-    protected function successResponse(array $param, $httpStatusCode = 200, array $customHeader = array(), $format = 'json')
+    protected function successResponse(array $param, $httpStatusCode = 200, array $customHeader = array(), $format = 'json', $useSerializer = false)
     {
         if (!Validator::validate($param, 'data', null, 'empty')) {
             throw new \InvalidArgumentException('Success response needs "data" child', 500);
@@ -195,7 +195,7 @@ class BaseController extends Controller
         if (is_array($param['data'])) {
             foreach ($param['data'] as $key=>$value) {
                 if ($value instanceof EntityInterface) {
-                    if (method_exists($value, 'toArray')) {
+                    if (method_exists($value, 'toArray') && !$useSerializer) {
                         $param['data'][$key] = $value->toArray();
                     } else {
                         $param['data'][$key] = json_decode($this->serializer->serialize($value, 'json'), true);
@@ -212,7 +212,7 @@ class BaseController extends Controller
             }    
         } else {
             if ($param['data'] instanceof EntityInterface) {
-                if (method_exists($param['data'], 'toArray')) {
+                if (method_exists($param['data'], 'toArray') && !$useSerializer) {
                     $param['data'] = $param['data']->toArray();
                 } else {
                     $param['data'] = json_decode($this->serializer->serialize($param['data'], 'json'), true);
