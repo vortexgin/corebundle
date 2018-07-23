@@ -32,12 +32,20 @@ class GoogleSheetsManager
      * Construct
      * 
      * @param \Google_Client $googleClient  Google client instance
+     * @param string         $appName       Application name
+     * @param string         $scopes        Application scopes
+     * @param string         $authConfig    Path authentification file config
      * @param string         $spreadsheetId Spreadsheet ID
      * 
      * @return void
      */
-    public function __construct(\Google_Client $googleClient, $spreadsheetId)
+    public function __construct(\Google_Client $googleClient, $appName, $scopes, $authConfig, $spreadsheetId)
     {
+        $googleClient->setApplicationName($appName);
+        $googleClient->setScopes($scopes);
+        $googleClient->setAuthConfig($authConfig);
+        //$googleClient->setAccessType('offline');
+
         $this->_service = new \Google_Service_Sheets($googleClient);
         $this->_spreadsheetId = $spreadsheetId;
     }
