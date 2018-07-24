@@ -89,11 +89,15 @@ class EntityManipulator extends CacheManipulator
             } else {
                 $method = CamelCasizer::underScoreToCamelCase($key);
 
-                if (!method_exists($this->_entity, $method)) {
+                if (method_exists($this->_entity, $method)) {
+                    call_user_func_array(array($this->_entity, $method), array($value));
+                } else {
                     $method = CamelCasizer::underScoreToCamelCase(sprintf('is_%s', $key));
-                }
 
-                call_user_func_array(array($this->_entity, $method), array($value));
+                    if (method_exists($this->_entity, $method)) {
+                        call_user_func_array(array($this->_entity, $method), array($value));
+                    }
+                }
             }
         }
 
