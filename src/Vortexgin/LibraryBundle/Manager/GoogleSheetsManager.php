@@ -59,7 +59,7 @@ class GoogleSheetsManager
      */
     public function get($range)
     {
-        $sheets = $this->_service->spreadsheets_values->get($this->_spreadsheetId, $range);
+        $response = $this->_service->spreadsheets_values->get($this->_spreadsheetId, $range);
         return $response->getValues();
     }
 
@@ -82,5 +82,26 @@ class GoogleSheetsManager
             'valueInputOption' => 'RAW'
         ];
         return  $_service->spreadsheets_values->update($spreadsheetId, $range, $body, $params);
+    }
+
+    /**
+     * Function to append row on sheet
+     * 
+     * @param string $range  Range of cell
+     * @param array  $values Value paramenter
+     * 
+     * @return mixed
+     */
+    public function appen($range, array $values)
+    {
+        $body = new \Google_Service_Sheets_ValueRange(
+            [
+            'values' => $values
+            ]
+        );
+        $params = [
+            'valueInputOption' => 'RAW'
+        ];
+        return  $_service->spreadsheets_values->append($spreadsheetId, $range, $body, $params);
     }
 }
