@@ -81,7 +81,7 @@ class GoogleSheetsManager
         $params = [
             'valueInputOption' => 'RAW'
         ];
-        return  $_service->spreadsheets_values->update($spreadsheetId, $range, $body, $params);
+        return  $this->_service->spreadsheets_values->update($this->_spreadsheetId, $range, $body, $params);
     }
 
     /**
@@ -92,16 +92,19 @@ class GoogleSheetsManager
      * 
      * @return mixed
      */
-    public function appen($range, array $values)
+    public function append($range, array $values)
     {
         $body = new \Google_Service_Sheets_ValueRange(
             [
-            'values' => $values
+                'range' => $range,
+                'majorDimension' => 'ROWS',
+                'values' => $values
             ]
         );
         $params = [
-            'valueInputOption' => 'RAW'
+            'valueInputOption' => 'RAW', 
+            'insertDataOption' => 'INSERT_ROWS',
         ];
-        return  $_service->spreadsheets_values->append($spreadsheetId, $range, $body, $params);
+        return  $this->_service->spreadsheets_values->append($this->_spreadsheetId, $range, $body, $params);
     }
 }
