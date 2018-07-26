@@ -75,7 +75,9 @@ class GoogleSheetsManager
     {
         $body = new \Google_Service_Sheets_ValueRange(
             [
-            'values' => $values
+                'range' => $range,
+                'majorDimension' => 'ROWS',
+                'values' => $values
             ]
         );
         $params = [
