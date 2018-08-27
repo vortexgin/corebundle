@@ -82,6 +82,12 @@ class EntityManipulator extends CacheManipulator
         }
 
         foreach ($data as $key => $value) {
+            if (empty($value)) {
+                continue;
+            }
+            if (is_array($value) && array_key_exists('date', $value) && array_key_exists('timezone_type', $value) && array_key_exists('timezone', $value)) {
+                $value = \DateTime::createFromFormat('Y-m-d G:i:s.000000', $value['date']);
+            }
             $method = CamelCasizer::underScoreToCamelCase(sprintf('set_%s', $key));
 
             if (method_exists($this->_entity, $method)) {

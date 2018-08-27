@@ -51,6 +51,20 @@ class GoogleSheetsManager
     }
 
     /**
+     * Set spreadsheet id
+     * 
+     * @param string $spreadsheetId Spreadsheet ID
+     * 
+     * @return self
+     */
+    public function setSpreadsheetId($spreadsheetId)
+    {
+        $this->_spreadsheetId = $spreadsheetId;
+
+        return $this;
+    }
+
+    /**
      * Function to get values from range
      * 
      * @param string $range Range of cell
