@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * 
  * @MongoDB\MappedSuperclass
  */
-class BaseMongo
+class Base
 {
     /**
      * ID

@@ -111,6 +111,23 @@ class Base
     }
 
     /**
+     * Convert entity into string
+     * 
+     * @return string
+     */
+    public function __toString()
+    {
+        if (method_exists($this, 'getName')) {
+            return $this->getName();
+        } elseif (method_exists($this, 'getTitle')) {
+            return $this->getTitle();
+        } else {
+            return '';
+        }
+
+    }
+
+    /**
      * Get id.
      *
      * @return int
