@@ -139,15 +139,15 @@ class Validator
      * 
      * @return boolean
      */
-    public function entity($class, $params)
+    public function entity($class, $params, array $skipFields = array())
     {
         try {
             $phpDocExtractor = new PhpDocExtractor();
             $doctrineExtractor = new DoctrineExtractor($this->_em->getMetadataFactory());
-    
+
             $properties = $doctrineExtractor->getProperties($class);
             foreach ($properties as $property) {
-                if (in_array($property, ['id', 'isActive', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy'])) {
+                if (in_array($property, array_merge($skipFields, ['id', 'isActive', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy']))) {
                     continue;
                 }
 
@@ -170,7 +170,7 @@ class Validator
                             }
                         }
                     }
-    
+
                     if (!self::validate($params, $property, 'null', 'empty')) {
                         continue;
                     }
@@ -192,14 +192,12 @@ class Validator
                             if ($type->isCollection()) {
 
                             } else {
-                                if (!$type->isNullable()) {
-                                    $repo = $this->_em->getRepository($type->getClassName());
-                                    $object = $repo->find($params[$property]);
-                                    if (!$object) {
-                                        return $shortDesc.' not found';
-                                    }
-                                    $params[$property] = $object;
-                                }    
+                                $repo = $this->_em->getRepository($type->getClassName());
+                                $object = $repo->find($params[$property]);
+                                if (!$object) {
+                                    return $shortDesc.' not found';
+                                }
+                                $params[$property] = $object;
                             }
                         }
                     }
