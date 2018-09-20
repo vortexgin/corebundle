@@ -2,8 +2,8 @@ services:
     vortexgin.library.manager.redis:
         class: Vortexgin\LibraryBundle\Manager\RedisManager
         arguments:
-            - @service_container
+            - '@service_container'
     vortexgin.library.manager.form.tokenizer:
         class: Vortexgin\LibraryBundle\Manager\FormTokenizerManager
         arguments:
-            - @vortexgin.library.manager.redis    
+            - '@vortexgin.library.manager.redis'
