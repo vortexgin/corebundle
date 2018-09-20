@@ -155,7 +155,7 @@ class Validator
 
                 if (count($types) > 0) {
                     $type = $types[0];
-                    $shortDesc = $phpDocExtractor->getShortDescription($class, $property)?:$type;
+                    $shortDesc = $phpDocExtractor->getShortDescription($class, $property)?:$property;
                     
                     if (!$type->isNullable()) {
                         if (in_array($type->getBuiltinType(), ['string'])) {
