@@ -200,6 +200,10 @@ class Validator
                                 $params[$property] = $object;
                             }
                         }
+                    } elseif (in_array($type->getBuiltinType(), ['array'])) {
+                        if (!is_array($params[$property])) {
+                            $params[$property] = [$params[$property]];
+                        }
                     }
                 }
             }
