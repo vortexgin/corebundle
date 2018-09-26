@@ -198,15 +198,19 @@ class BaseController extends Controller
                     if (method_exists($value, 'toArray') && !$useSerializer) {
                         $param['data'][$key] = $value->toArray();
                     } else {
-                        $param['data'][$key] = json_decode($this->serializer->serialize($value, 'json'), true);
-                        if (strtolower($format) == 'csv') {
-                            $title = array_keys($param['data'][$key]);
-                            $row = array();
-                            foreach ($param['data'][$key] as $object) {
-                                $row[] = is_array($object) || is_object($object)?'[Object]':$object;
-                            }
-                            $param['data'][$key] = $row;
-                        }    
+                        if (method_exists($value, 'toArray') && !$useSerializer) {
+                            $param['data'][$key] = $value->toArray();
+                        } else {
+                            $param['data'][$key] = json_decode($this->serializer->serialize($value, 'json'), true);
+                            if (strtolower($format) == 'csv') {
+                                $title = array_keys($param['data'][$key]);
+                                $row = array();
+                                foreach ($param['data'][$key] as $object) {
+                                    $row[] = is_array($object) || is_object($object)?'[Object]':$object;
+                                }
+                                $param['data'][$key] = $row;
+                            }        
+                        }
                     }
                 }
             }    
