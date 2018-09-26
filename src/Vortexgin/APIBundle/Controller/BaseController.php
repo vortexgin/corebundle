@@ -212,6 +212,10 @@ class BaseController extends Controller
                             }        
                         }
                     }
+                } else {
+                    if (method_exists($value, 'toArray') && !$useSerializer) {
+                        $param['data'][$key] = $value->toArray();
+                    }
                 }
             }    
         } else {
@@ -228,6 +232,10 @@ class BaseController extends Controller
                         }
                         $param['data'] = $row;
                     }
+                }
+            } else {
+                if (method_exists($value, 'toArray') && !$useSerializer) {
+                    $param['data'][$key] = $value->toArray();
                 }
             }
         }
