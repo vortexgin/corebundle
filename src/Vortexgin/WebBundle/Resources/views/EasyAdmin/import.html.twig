@@ -1,0 +1,121 @@
+{% set _entity_config = easyadmin_entity(app.request.query.get('entity')) %}
+
+{% extends _entity_config.templates.layout %}
+
+{% block page_title %}Import CSV Data into Entity{% endblock %}
+
+{% block main %}
+    <form class="form-inline" method="post" enctype="multipart/form-data">
+        <div class="col col-md-12">
+            <div class="form-group">
+                <label for="file">CSV File</label>
+                <input type="file" class="form-control" id="file" name="file" placeholder="Only support csv file">
+            </div>
+            <button type="submit" name="submit" id="submit" class="btn btn-primary">Upload</button>
+        </div>
+        <div class="col col-md-12">
+            <div class="checkbox">
+                <label>
+                    *) First row will be treated as title column
+                </label>
+            </div>
+        </div>
+        {% if err is defined and err is not empty %}
+            <div class="col col-md-12" id="error" style="margin-top: 2rem;">
+                {% for error in err %}
+                    <div class="alert alert-danger">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <div class="col col-md-12" style="margin-top: 2rem;">
+            <div class="table-responsive">
+                <table class="table-striped" id="table-import" role="table">
+                    <thead></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </form>
+{% endblock %}
+
+{% block body_javascript %}
+    {{ parent() }}
+
+    <script src="{{ asset('bundles/vortexginweb/plugins/jquery-csv/src/jquery.csv.min.js') }}"></script>
+    <script src="{{ asset('bundles/vortexginweb/js/base64.js') }}"></script>
+
+    <script type="text/javascript">
+        var fields = JSON.parse('{{ fields|json_encode|raw }}');
+        $(function() {
+            $('input[name=file]').change(function (event) {
+                var src = document.getElementById("file"),
+                    html = '';
+                if (src.files && src.files[0]) {
+                    $('#table-import').find('thead').html('');
+                    $('#table-import').find('tbody').html('');
+                    if ($('#error').length > 0) {
+                        $('#error').html('');
+                    }
+
+                    var FR = new FileReader();
+                    FR.onload = function (e) {
+                        try {
+                            var result = e.target.result,
+                                type = result.split(';base64,')[0],
+                                content = result.split(';base64,')[1];
+                            if (type == 'data:text/csv' || type == 'data:application/vnd.ms-excel') {
+                                var csv = Base64.decode(content),
+                                    object = $.csv.toArrays(csv),
+                                    start = 1, 
+                                    count = object.length - 1, 
+                                    head = '', 
+                                    body = '';
+                                if (count > 0) {
+                                    // head
+                                    head += '<tr>';
+                                    var index = 0;
+                                    object[0].forEach(function (element) {
+                                        head += '<th style="vertical-align: top;">';
+                                            head += '<select name="fields[' + index + ']" id="fields_' + index + '" class="form-control select-fields">';
+                                            head += '<option value="">Select field</option>';
+                                            fields.forEach(function (field) {
+                                                head += '<option value="' + field + '">' + field + '</option>';
+                                            });
+                                            head += '</select><br />';
+                                            head += '<strong>' + element + '</strong><br />';
+                                        head += '</th>';
+                                        index++;
+                                    });
+                                    head += '</tr>';
+                                    $('#table-import').find('thead').append(head);
+
+                                    var max = (count < 20)?count:20;
+                                    for (var index=start;index<max;index++) {
+                                        body += '<tr>';
+                                        object[index].forEach(function (element) {
+                                            //body
+                                            body += '<td>' + element + '</td>';
+                                        });
+                                        body += '</tr>';
+                                    }
+                                    $('#table-import').find('tbody').append(body);
+                                } else {
+                                    alert('Empty file');
+                                }
+                            } else {
+                                alert('Unknown format');
+                            }
+                        } catch (e) {
+                            alert(e);
+                        }
+                    };
+                    FR.readAsDataURL(src.files[0]);
+                }
+            });
+
+        });
+    </script>
+{% endblock %}

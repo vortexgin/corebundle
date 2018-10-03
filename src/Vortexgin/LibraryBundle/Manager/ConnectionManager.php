@@ -105,11 +105,13 @@ class ConnectionManager
             }
             $options = array_merge($_param, array('headers' => $header));
     
-            $client = new Client();
-            $client->setDefaultOption('verify', false);
-
-            $apiRequest = $client->createRequest($method, $this->baseUrl . $url, $options);
-            $apiResponse = $client->send($apiRequest);
+            $client = new Client(
+                [
+                    'base_uri' => $this->baseUrl, 
+                    'verify' => false
+                ]
+            );
+            $apiResponse = $client->request($method, $this->baseUrl . $url, $options);
             $content = $apiResponse->getBody();
             if ($apiResponse->getBody() instanceof Stream) {
                 $content = $apiResponse->getBody()->getContents();
@@ -165,6 +167,8 @@ class ConnectionManager
 
             return $response;
         } catch (\Exception $e) {
+            var_dump($e->getMessage());
+            var_dump($e->getTraceAsString());
             return false;
         }
     }
