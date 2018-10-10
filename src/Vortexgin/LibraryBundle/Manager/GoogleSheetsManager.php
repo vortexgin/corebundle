@@ -15,9 +15,9 @@ class GoogleSheetsManager
 {
 
     /**
-     * Google Client
+     * Google Sheets Service
      * 
-     * @var \Google_Client
+     * @var \Google_Service_Sheets
      */
     private $_service;
 

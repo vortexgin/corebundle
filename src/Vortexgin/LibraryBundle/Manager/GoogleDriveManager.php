@@ -15,9 +15,9 @@ class GoogleDriveManager
 {
 
     /**
-     * Google Client
+     * Google Drive Service
      * 
-     * @var \Google_Client
+     * @var \Google_Service_Drive
      */
     private $_service;
 
@@ -50,12 +50,14 @@ class GoogleDriveManager
      */
     public function search($keyword)
     {
-        $response = $this->_service->files->listFiles(array(
-            'q' => $keyword,
-            'spaces' => 'drive',
-            'pageToken' => null,
-            'fields' => 'nextPageToken, files(id, name)',
-        ));        
+        $response = $this->_service->files->listFiles(
+            array(
+                'q' => $keyword,
+                'spaces' => 'drive',
+                'pageToken' => null,
+                'fields' => 'nextPageToken, files(id, name)',
+            )
+        );        
         return $response->files;
     }
 
