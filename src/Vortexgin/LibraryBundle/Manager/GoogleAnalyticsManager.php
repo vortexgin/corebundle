@@ -43,6 +43,13 @@ class GoogleAnalyticsManager
     private $_metrics;
 
     /**
+     * Dimensions
+     * 
+     * @var array
+     */
+    private $_dimensions;
+
+    /**
      * Construct
      * 
      * @param \Google_Client $googleClient Google client instance
@@ -116,6 +123,22 @@ class GoogleAnalyticsManager
     }
 
     /**
+     * Set dimensions
+     * 
+     * @param string $dimension Dimension
+     * 
+     * @return self
+     */
+    public function setDimensions($dimension)
+    {
+        $session = new \Google_Service_AnalyticsReporting_Dimension();
+        $session->setName($dimension);
+        $this->_dimensions[] = $session;
+      
+        return $this;
+    }
+
+    /**
      * Request report
      * 
      * @return mixed
@@ -136,6 +159,9 @@ class GoogleAnalyticsManager
         $request->setViewId($this->_viewId);
         $request->setDateRanges($this->_dateRange);
         $request->setMetrics($this->_metrics);
+        if (!empty($this->_dimensions)) {
+            $request->setDimensions($this->_dimensions);
+        }
 
         $body = new \Google_Service_AnalyticsReporting_GetReportsRequest();
         $body->setReportRequests(array($request));
@@ -154,10 +180,25 @@ class GoogleAnalyticsManager
     {
         $return = [];
         foreach ($responses as $response) {
+            $metricHeaders = [];
+            foreach ($response->getColumnHeader()->getMetricHeader()->getMetricHeaderEntries() as $headerEntry) {
+                $metricHeaders[] = $headerEntry->getName();
+            }
+            $data = [];
+            foreach ($response->getData()->getRows() as $row) {
+                $item = [];
+                foreach ($row->getDimensions() as $dimension) {
+                    foreach ($row->getMetrics()[0]->getValues() as $metric) {
+                        $item[$dimension][] = !empty($metric)?$metric:0;
+                    }
+
+                }
+                $data[] = $item;
+            }
             $return[] = array(
                 'dimensionHeaders' => $response->getColumnHeader()->getDimensions(), 
-                'metricHeaders' => $response->getColumnHeader()->getMetricHeader()->getMetricHeaderEntries(), 
-                'data' => $response->getData()->getRows(), 
+                'metricHeaders' => $metricHeaders, 
+                'data' => $data, 
             );
         }
 
