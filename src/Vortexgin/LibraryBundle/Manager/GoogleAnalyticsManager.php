@@ -72,6 +72,19 @@ class GoogleAnalyticsManager
     }
 
     /**
+     * Reset manager
+     * 
+     * @return self
+     */
+    public function reset()
+    {
+        $this->resetDateRange();
+        $this->resetMetrics();
+        $this->resetDimensions();
+
+    }
+
+    /**
      * Set view id
      * 
      * @param string $viewId View ID
@@ -103,6 +116,18 @@ class GoogleAnalyticsManager
     }
 
     /**
+     * Reset date range
+     * 
+     * @return self
+     */
+    public function resetDateRange()
+    {
+        $this->_dateRange = null;
+
+        return $this;
+    }
+
+    /**
      * Set metrics
      * 
      * @param string $metric Metric
@@ -123,6 +148,18 @@ class GoogleAnalyticsManager
     }
 
     /**
+     * Reset metrics
+     * 
+     * @return self
+     */
+    public function resetMetrics()
+    {
+        $this->_metrics = [];
+
+        return $this;
+    }
+
+    /**
      * Set dimensions
      * 
      * @param string $dimension Dimension
@@ -135,6 +172,18 @@ class GoogleAnalyticsManager
         $session->setName($dimension);
         $this->_dimensions[] = $session;
       
+        return $this;
+    }
+
+    /**
+     * Reset dimensions
+     * 
+     * @return self
+     */
+    public function resetDimensions()
+    {
+        $this->_dimensions = [];
+
         return $this;
     }
 
