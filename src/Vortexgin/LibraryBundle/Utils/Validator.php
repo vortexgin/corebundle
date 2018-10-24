@@ -139,7 +139,7 @@ class Validator
      * 
      * @return boolean
      */
-    public function entity($class, $params, array $skipFields = array())
+    public function entity($class, $params, array $skipFields = array(), $updated = false)
     {
         try {
             $phpDocExtractor = new PhpDocExtractor();
@@ -152,23 +152,25 @@ class Validator
                 }
 
                 $types = $doctrineExtractor->getTypes($class, $property);
-
                 if (count($types) > 0) {
                     $type = $types[0];
                     $shortDesc = $phpDocExtractor->getShortDescription($class, $property)?:$property;
                     
-                    if (!$type->isNullable()) {
-                        if (in_array($type->getBuiltinType(), ['string'])) {
-                            if (!self::validate($params, $property, null, 'empty')) {
-                                return $shortDesc.' cannot be empty';
-                            }
-                        } else {
-                            if (!$type->isCollection()) {
-                                if (!self::validate($params, $property, 'null', 'empty')) {
+                    if (!$updated) {
+                        if (!$type->isNullable()) {
+                            if (in_array($type->getBuiltinType(), ['string'])) {
+                                if (!self::validate($params, $property, null, 'empty')) {
                                     return $shortDesc.' cannot be empty';
-                                }    
+                                }
+                            } else {
+                                if (!$type->isCollection()) {
+                                    if (!self::validate($params, $property, 'null', 'empty')) {
+                                        return $shortDesc.' cannot be empty';
+                                    }    
+                                }
                             }
                         }
+    
                     }
 
                     if (!self::validate($params, $property, 'null', 'empty')) {

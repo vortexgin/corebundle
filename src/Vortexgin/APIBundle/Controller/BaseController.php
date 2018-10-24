@@ -375,17 +375,17 @@ class BaseController extends Controller
             $format = Validator::validate($get, '_format', null, 'empty')?$get['_format']:'json';
 
             $object = $this->createNew();
+            $validator = new Validator($this->em);
+            $post['params'] = Validator::validate($post, 'params', null, 'empty')?$post['params']:array();
             if (Validator::validate($post, 'id', null, 'empty')) {
                 $object = $this->repo->find($post['id']);
+                $post['params'] = $validator->entity($this->class, $post['params'], array(), true);
             } else {
-                $validator = new Validator($this->em);
-                $post['params'] = Validator::validate($post, 'params', null, 'empty')?$post['params']:array();
                 $post['params'] = $validator->entity($this->class, $post['params']);
-                if (!is_array($post['params'])) {
-                    return $this->errorResponse($post['params'], HttpStatusHelper::HTTP_BAD_REQUEST);
-                }
             }
-
+            if (!is_array($post['params'])) {
+                return $this->errorResponse($post['params'], HttpStatusHelper::HTTP_BAD_REQUEST);
+            }
 
             if (Validator::validate($post, 'params', 'array', 'empty')) {
                 $entityManipulator = new EntityManipulator($this->em, $object);
