@@ -204,7 +204,7 @@ class EasyAdminController extends BaseAdminController
         $sortDirection = Validator::validate($get, 'sortDirection', null, 'empty')?$get['sortDirection']:'DESC';
         $sortField = Validator::validate($get, 'sortField', null, 'empty')?$get['sortField']:'id';
         $filters = Validator::validate($get, 'filters', null, 'empty')?$get['filters']:array();
-        $dqlFilter = $this->entity['list']['dql_filter'];
+        $dqlFilter = $this->entity['list']['dql_filter']?:'1=1';
         foreach ($filters as $field=>$value) {
             $dqlFilter.= sprintf(" AND %s=%s", $field, $value);
         }
