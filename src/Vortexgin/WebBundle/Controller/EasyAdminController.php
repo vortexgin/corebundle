@@ -2,6 +2,7 @@
 
 namespace Vortexgin\WebBundle\Controller;
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -284,6 +285,8 @@ class EasyAdminController extends BaseAdminController
                                 $em = $this->getDoctrine()->resetManager();
                             }
                         }
+
+                        return new RedirectResponse($_SERVER['REQUEST_URI']);
                     }    
                 }
             }
