@@ -53,7 +53,7 @@ class Base
      * 
      * @var string
      *
-     * @ORM\Column(name="created_by", type="string", length=100, nullable=false)
+     * @ORM\Column(name="created_by", type="string", length=100, nullable=true)
      */
     protected $createdBy;
 
