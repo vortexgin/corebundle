@@ -75,6 +75,12 @@ class EasyAdminController extends BaseAdminController
      */
     protected function updateEntity($entity)
     {
+        $validator = new Validator($this->container->get('doctrine')->getManager());
+        $fileValid = $validator->validateFileOnEntity($entity);
+        if ($fileValid !== true) {
+            throw new Exception("File not valid");
+        }
+
         $entity = $this->updateSlug($entity);
         $entity = $this->updateEntityLog($entity);
 
@@ -299,7 +305,7 @@ class EasyAdminController extends BaseAdminController
             }
         }
 
-        return $this->render('@VortexginWebBundle/EasyAdmin/import.html.twig', $data);                
+        return $this->render('@VortexginWebBundle/EasyAdmin/import.html.twig', $data);
     }
 
 }

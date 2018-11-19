@@ -3,10 +3,14 @@
 namespace Vortexgin\LibraryBundle\Utils;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Bridge\Doctrine\PropertyInfo\DoctrineExtractor;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
+use Symfony\Component\Validator\Constraints\File as ConstraintsFile;
 use Vortexgin\LibraryBundle\Model\EntityInterface;
+use Vortexgin\LibraryBundle\Utils\CamelCasizer;
 
 
 /**
@@ -134,10 +138,12 @@ class Validator
     /**
      * Function to validate entity
      * 
-     * @param object $class  Class entity
-     * @param array  $params Parameter
+     * @param object $class      Class entity
+     * @param array  $params     Parameter
+     * @param array  $skipFields Skip fields
+     * @param bool   $updated    Is updated?
      * 
-     * @return boolean
+     * @return mixed
      */
     public function entity($class, $params, array $skipFields = array(), $updated = false)
     {
@@ -214,5 +220,72 @@ class Validator
         } catch (\Exception $e) {
             return $e->getMessage();
         }
+    }
+
+    /**
+     * Function to validate file on entity
+     * 
+     * @param object $object Object entity
+     * 
+     * @return mixed
+     */
+    public function validateFileOnEntity($object)
+    {
+        try {
+            $annotationReader = new AnnotationReader();
+            $reflector = new \ReflectionClass($object);
+            $properties = $reflector->getProperties();
+            if (count($properties) > 0) {
+                foreach ($properties as $property) {
+                    $value = null;
+                    if (method_exists($object, CamelCasizer::underScoreToCamelCase('get'.$property->getName()))) {
+                        $method = CamelCasizer::underScoreToCamelCase('get'.$property->getName());
+                        $value = $object->$method();
+                    } elseif (method_exists($object, CamelCasizer::underScoreToCamelCase('has'.$property->getName()))) {
+                        $method = CamelCasizer::underScoreToCamelCase('has'.$property->getName());
+                        $value = $object->$method();
+                    }
+
+                    if (!empty($value)) {
+                        $propertyAnnotations = $annotationReader->getPropertyAnnotations($property);
+                        if (count($propertyAnnotations) > 0) {
+                            foreach ($propertyAnnotations as $annotation) {
+                                if (get_class($annotation) == 'Symfony\Component\Validator\Constraints\File') {
+                                    if (property_exists($annotation, 'mimeTypes') && !empty($annotation->mimeTypes)) {
+                                        if (!in_array($value->getMimeType(), $annotation->mimeTypes)) {
+                                            return false;
+                                        }
+
+                                        $filename = $value->getClientOriginalName();
+                                        $exp = explode('.', $filename);
+                                        $fileExt = $exp[count($exp)-1];
+                                        $extExists = false;
+                                        foreach (FileUtils::$mimeType as $ext=>$mime) {
+                                            if ($value->getMimeType() == $mime) {
+                                                if ($value->guessExtension() == $ext) {
+                                                    $extExists = true;
+                                                }
+                                                if ($fileExt == $ext) {
+                                                    $extExists = true;
+                                                }
+                                            }
+                                        }
+                                        if (!$extExists) {
+                                            return false;
+                                        }
+                                    } else {
+                                        return false;
+                                    }
+                                }
+                            }
+                        }    
+                    }
+                }
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }    
     }
 }
