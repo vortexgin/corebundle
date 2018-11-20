@@ -109,6 +109,8 @@ class EasyAdminController extends BaseAdminController
     {
         $entity = $this->updateAttending($entity, $property, $value);
         $entity = $this->updateModerated($entity, $property, $value);
+        $entity = $this->updateClaim($entity, $property, $value);
+        $entity = $this->updateComplete($entity, $property, $value);
 
         parent::updateEntityProperty($entity, $property, $value);
     }
@@ -237,6 +239,56 @@ class EasyAdminController extends BaseAdminController
     protected function updateModerated($entity, $property = null, $value = null)
     {
         if ($property == 'moderated') {
+            if (method_exists($entity, 'setModeratedBy')) {
+                $who = !empty($this->get('security.token_storage')->getToken())?$this->get('security.token_storage')->getToken()->getUser():'Anonymous';
+                if ($value === true) {
+                    $entity->setModeratedBy($who);
+                } else {
+                    $entity->setModeratedBy(null);
+                }
+            }
+        }
+
+        return $entity;
+    }
+
+    /**
+     * Function to update claim field
+     * 
+     * @param object $entity   Object of entity
+     * @param mixed  $property Property of entity
+     * @param mixed  $value    Value of property
+     * 
+     * @return object
+     */
+    protected function updateClaim($entity, $property = null, $value = null)
+    {
+        if ($property == 'claim') {
+            if (method_exists($entity, 'setClaimedBy')) {
+                $who = !empty($this->get('security.token_storage')->getToken())?$this->get('security.token_storage')->getToken()->getUser():'Anonymous';
+                if ($value === true) {
+                    $entity->setClaimedBy($who);
+                } else {
+                    $entity->setClaimedBy(null);
+                }
+            }
+        }
+
+        return $entity;
+    }
+
+    /**
+     * Function to update claim field
+     * 
+     * @param object $entity   Object of entity
+     * @param mixed  $property Property of entity
+     * @param mixed  $value    Value of property
+     * 
+     * @return object
+     */
+    protected function updateComplete($entity, $property = null, $value = null)
+    {
+        if ($property == 'complete') {
             if (method_exists($entity, 'setModeratedBy')) {
                 $who = !empty($this->get('security.token_storage')->getToken())?$this->get('security.token_storage')->getToken()->getUser():'Anonymous';
                 if ($value === true) {
