@@ -59,6 +59,12 @@ class EasyAdminController extends BaseAdminController
      */
     protected function persistEntity($entity)
     {
+        $validator = new Validator($this->container->get('doctrine')->getManager());
+        $fileValid = $validator->validateFileOnEntity($entity);
+        if ($fileValid !== true) {
+            throw new Exception("File not valid");
+        }
+
         $entity = $this->updateSlug($entity);
         $entity = $this->createEntityLog($entity);
 
@@ -101,13 +107,9 @@ class EasyAdminController extends BaseAdminController
      */
     protected function updateEntityProperty($entity, $property, $value)
     {
-        if ($property == 'attend' && method_exists($entity, 'setAttendingTime')) {
-            if ($value === true) {
-                $entity->setAttendingTime(new \DateTime());
-            } else {
-                $entity->setAttendingTime(null);
-            }
-        }
+        $entity = $this->updateAttending($entity, $property, $value);
+        $entity = $this->updateModerated($entity, $property, $value);
+
         parent::updateEntityProperty($entity, $property, $value);
     }
     /**
@@ -194,6 +196,55 @@ class EasyAdminController extends BaseAdminController
     {
         if (method_exists($entity, 'setSlug') and method_exists($entity, 'getTitle')) {
             $entity->setSlug(StringUtils::createSlug($entity->getTitle()));
+        }
+
+        return $entity;
+    }
+
+    /**
+     * Function to update attending field
+     * 
+     * @param object $entity   Object of entity
+     * @param mixed  $property Property of entity
+     * @param mixed  $value    Value of property
+     * 
+     * @return object
+     */
+    protected function updateAttending($entity, $property = null, $value = null)
+    {
+        if ($property == 'attend') {
+            if (method_exists($entity, 'setAttendingTime')) {
+                if ($value === true) {
+                    $entity->setAttendingTime(new \DateTime());
+                } else {
+                    $entity->setAttendingTime(null);
+                }
+            }
+        }
+
+        return $entity;
+    }
+
+    /**
+     * Function to update moderated field
+     * 
+     * @param object $entity   Object of entity
+     * @param mixed  $property Property of entity
+     * @param mixed  $value    Value of property
+     * 
+     * @return object
+     */
+    protected function updateModerated($entity, $property = null, $value = null)
+    {
+        if ($property == 'moderated') {
+            if (method_exists($entity, 'setModeratedBy')) {
+                $who = !empty($this->get('security.token_storage')->getToken())?$this->get('security.token_storage')->getToken()->getUser():'Anonymous';
+                if ($value === true) {
+                    $entity->setModeratedBy($who);
+                } else {
+                    $entity->setModeratedBy(null);
+                }
+            }
         }
 
         return $entity;
