@@ -2,7 +2,8 @@ var Cookie = {
     Create: function(key, value, path, days){
         var path = path || '/',
             days = days || 1,
-            expires;
+            expires, 
+            secure = '';
 
         if (days) {
             var date = new Date();
@@ -11,8 +12,11 @@ var Cookie = {
         } else {
             expires = "";
         }
+        if (window.location.protocol == 'https:') {
+            secure = ';secure';
+        }
 
-        document.cookie = encodeURIComponent(key) + "=" + encodeURIComponent(value) + expires + "; path=" + path;
+        document.cookie = encodeURIComponent(key) + "=" + encodeURIComponent(value) + expires + "; path=" + path + secure;
     },
     Read: function(key){
         var nameEQ = encodeURIComponent(key) + "=";
