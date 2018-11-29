@@ -210,7 +210,22 @@ class Validator
                         }
                     } elseif (in_array($type->getBuiltinType(), ['array'])) {
                         if (!is_array($params[$property])) {
-                            $params[$property] = [$params[$property]];
+                            $tmp = array();
+                            if (stristr($params[$property], '#') !== false) {
+                                $tmp = explode('#', $params[$property]);
+                            } elseif (stristr($params[$property], ';') !== false) {
+                                $tmp = explode(';', $params[$property]);
+                            } elseif (stristr($params[$property], ',') !== false) {
+                                $tmp = explode(',', $params[$property]);
+                            } else {
+                                $tmp = [$params[$property]];
+                            }
+                
+                            $params[$property] = array();
+                            foreach ($tmp as $value) {
+                                if (empty($value)) continue;
+                                $params[$property][] = $value;
+                            }
                         }
                     }
                 }
