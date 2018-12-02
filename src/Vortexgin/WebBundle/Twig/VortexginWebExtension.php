@@ -47,11 +47,14 @@ class VortexginWebExtension extends AbstractExtension
         return array(
             new TwigFilter('form_generate_token', array($this, 'formTokenizerGenerateToken')),
             new TwigFilter('filter_admin_actions', array($this, 'filterActions')),
+            new TwigFilter('parse_url', array($this, 'parseUrl')),
         );
     }
 
     /**
      * Twig Filter Generate Form Token
+     * 
+     * @param string $prefix Prefix
      * 
      * @return string
      */
@@ -63,6 +66,9 @@ class VortexginWebExtension extends AbstractExtension
     /**
      * Twig Filter Remove export button
      * 
+     * @param array $itemActions Item actions
+     * @param array $item        Item
+     * 
      * @return string
      */
     public function filterActions(array $itemActions, $item)
@@ -70,6 +76,19 @@ class VortexginWebExtension extends AbstractExtension
         unset($itemActions['export']);
         unset($itemActions['import']);
         return $itemActions;
+    }
+
+    /**
+     * Twig Filter Parse URL
+     * 
+     * @param string $url   URL to parse
+     * @param int    $parse Component to fetch
+     * 
+     * @return string
+     */
+    public function parseUrl($url, $parse)
+    {
+        return parse_url($url, $parse);
     }
 
     /**
