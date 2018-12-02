@@ -78,6 +78,16 @@ class EntityManipulator extends CacheManipulator
     }
 
     /**
+     * Function to get active repo
+     * 
+     * @return \Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository
+     */
+    public function getRepo()
+    {
+        return $this->_repo;
+    }
+
+    /**
      * Function to bind data from array into object entity
      * 
      * @param array $data Array of data
