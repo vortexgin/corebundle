@@ -3,6 +3,7 @@
 namespace Vortexgin\LibraryBundle\Utils\Doctrine\ORM;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query;
 use Vortexgin\LibraryBundle\Utils\CamelCasizer;
 use Vortexgin\APIBundle\Utils\LogEntityChanges;
 
@@ -39,6 +40,13 @@ class EntityManipulator extends CacheManipulator
     private $_repo;
 
     /**
+     * Result Manipulator
+     * 
+     * @var \Vortexgin\LibraryBundle\Utils\Doctrine\ORM\ResultManipulator
+     */
+    private $_resultManipulator;
+
+    /**
      * Construct
      * 
      * @param \Doctrine\ORM\EntityManager $entityManager Entity Manager
@@ -52,6 +60,7 @@ class EntityManipulator extends CacheManipulator
         $reflectionClass = new \ReflectionClass($object);
         $this->_repo = $entityManager->getRepository($reflectionClass->getName());
         $this->_entity = $object;
+        $this->_resultManipulator = new ResultManipulator();
 
         parent::__construct($entityManager);
     }
@@ -179,7 +188,7 @@ class EntityManipulator extends CacheManipulator
      */
     public function find($id)
     {
-        $cacheId = sprintf('%s_%s', $this->getEntityShortName(), $id);
+        $cacheId = sprintf('find_%s_%s', $this->getEntityShortName(), $id);
         $object = $this->fetchFromCache($cacheId);
 
         if (!$object) {
@@ -199,13 +208,13 @@ class EntityManipulator extends CacheManipulator
      */
     public function findArray($id)
     {
-        $cacheId = sprintf('%s_%s', $this->getEntityShortName(), $id);
+        $cacheId = sprintf('find_array_%s_%s', $this->getEntityShortName(), $id);
         $result = $this->fetchFromCache($cacheId);
 
         if (!$result) {
             $queryBuilder = $this->_repo->createQueryBuilder('o');
             $queryBuilder->andWhere($queryBuilder->expr()->eq('o.id', $id));
-            $result = $this->getOneOrNullResult(Query::HYDRATE_ARRAY);
+            $result = $this->_resultManipulator->getOneOrNullResult(Query::HYDRATE_ARRAY);
 
             $this->saveCache($cacheId, $result);
         }
@@ -217,35 +226,178 @@ class EntityManipulator extends CacheManipulator
      * Function to find data by array criteria
      * 
      * @param array $criteria Array of criteria
+     * @param array $orderBy  Sort order
+     * @param array $limit    Data limit
+     * @param array $offset   Data offsett
      * 
      * @return mixed
      */
-    public function findBy(array $criteria)
+    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
-        $object = $this->_repo->findOneBy($criteria);
-        if ($object) {
-            $cacheId = sprintf('%s_%s', $this->getEntityShortName(), $object->getId());
-            $this->saveCache($cacheId, $object);
+        $cacheId = sprintf(
+            'find_by_%s_%s', $this->getEntityShortName(), 
+            serialize(
+                array(
+                    'criteria' => $criteria, 
+                    'orderBy' => $orderBy, 
+                    'limit' => $limit, 
+                    'offset' => $offset, 
+                )
+            )
+        );
+        $object = $this->fetchFromCache($cacheId);
 
-            return $object;
+        if (!$object) {
+            $object = $this->_repo->findBy($criteria, $orderBy, $limit, $offset);
+            $this->saveCache($cacheId, $object);
         }
+
+        return $object;
     }
 
     /**
      * Function to find data by array criteria with returning array format
      * 
      * @param array $criteria Array of criteria
+     * @param array $orderBy  Sort order
+     * @param array $limit    Data limit
+     * @param array $offset   Data offsett
      * 
      * @return mixed
      */
-    public function findByArray(array $criteria)
+    public function findByArray(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
-        $queryBuilder = $this->_repo->createQueryBuilder('o');
-        foreach ($criteria as $key => $value) {
-            $queryBuilder->andWhere($queryBuilder->expr()->eq(sprintf('o.%s', $key), sprintf(':%s', $key)));
-            $queryBuilder->setParameter($key, $value);
+        $cacheId = sprintf(
+            'find_by_array_%s_%s', $this->getEntityShortName(), 
+            serialize(
+                array(
+                    'criteria' => $criteria, 
+                    'orderBy' => $orderBy, 
+                    'limit' => $limit, 
+                    'offset' => $offset, 
+                )
+            )
+        );
+        $result = $this->fetchFromCache($cacheId);
+
+        if (!$result) {
+            $queryBuilder = $this->_repo->createQueryBuilder('o');
+            foreach ($criteria as $key => $value) {
+                $queryBuilder->andWhere($queryBuilder->expr()->eq(sprintf('o.%s', $key), sprintf(':%s', $key)));
+                $queryBuilder->setParameter($key, $value);
+            }
+            if (!empty($orderBy) && is_array($orderBy)) {
+                foreach ($orderBy as $key=>$value) {
+                    $queryBuilder->orderBy(sprintf('o.%s', $key), $value);
+                }
+            }
+            if (!empty($limit)) {
+                $queryBuilder->setMaxResults($limit);
+            }
+            if (!empty($offset)) {
+                $queryBuilder->setFirstResult($offset);
+            }
+            $result = $this->_resultManipulator->getResult($queryBuilder, Query::HYDRATE_ARRAY);
+    
+            $this->saveCache($cacheId, $result);
         }
 
-        return $this->getResult($queryBuilder, Query::HYDRATE_ARRAY);
+        return $result;
+    }
+
+    /**
+     * Function to find one data by array criteria
+     * 
+     * @param array $criteria Array of criteria
+     * @param array $orderBy  Sort order
+     * 
+     * @return mixed
+     */
+    public function findOneBy(array $criteria, array $orderBy = null)
+    {
+        $cacheId = sprintf(
+            'find_one_by_%s_%s', $this->getEntityShortName(), 
+            serialize(
+                array(
+                    'criteria' => $criteria, 
+                    'orderBy' => $orderBy, 
+                )
+            )
+        );
+        $object = $this->fetchFromCache($cacheId);
+
+        if (!$object) {
+            $object = $this->_repo->findOneBy($criteria, $orderBy);
+            $this->saveCache($cacheId, $object);
+        }
+
+        return $object;
+    }
+
+    /**
+     * Function to find data by array criteria with returning array format
+     * 
+     * @param array $criteria Array of criteria
+     * @param array $orderBy  Sort order
+     * 
+     * @return mixed
+     */
+    public function findOneByArray(array $criteria, array $orderBy = null)
+    {
+        $cacheId = sprintf(
+            'find_one_by_array_%s_%s', $this->getEntityShortName(), 
+            serialize(
+                array(
+                    'criteria' => $criteria, 
+                    'orderBy' => $orderBy, 
+                )
+            )
+        );
+        $result = $this->fetchFromCache($cacheId);
+
+        if (!$result) {
+            $queryBuilder = $this->_repo->createQueryBuilder('o');
+            foreach ($criteria as $key => $value) {
+                $queryBuilder->andWhere($queryBuilder->expr()->eq(sprintf('o.%s', $key), sprintf(':%s', $key)));
+                $queryBuilder->setParameter($key, $value);
+            }
+            if (!empty($orderBy) && is_array($orderBy)) {
+                foreach ($orderBy as $key=>$value) {
+                    $queryBuilder->orderBy(sprintf('o.%s', $key), $value);
+                }
+            }
+            $result = $this->_resultManipulator->getOneOrNullResult(Query::HYDRATE_ARRAY);
+    
+            $this->saveCache($cacheId, $result);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Function to count data by array criteria
+     * 
+     * @param array $criteria Array of criteria
+     * 
+     * @return mixed
+     */
+    public function count(array $criteria)
+    {
+        $cacheId = sprintf('count_%s_%s', $this->getEntityShortName(), serialize($criteria));
+        $result = $this->fetchFromCache($cacheId);
+
+        if (!$result) {
+            $queryBuilder = $this->_repo->createQueryBuilder('o');
+            $queryBuilder->select('count(o.id)');
+            foreach ($criteria as $key => $value) {
+                $queryBuilder->andWhere($queryBuilder->expr()->eq(sprintf('o.%s', $key), sprintf(':%s', $key)));
+                $queryBuilder->setParameter($key, $value);
+            }
+            $result = $this->_resultManipulator->getOneOrNullResult($queryBuilder, Query::HYDRATE_ARRAY);
+    
+            $this->saveCache($cacheId, $result);
+        }
+
+        return $result[1];
     }
 }

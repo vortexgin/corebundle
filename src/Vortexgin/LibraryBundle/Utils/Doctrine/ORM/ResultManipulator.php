@@ -1,6 +1,6 @@
 <?php
 
-namespace Vortexgin\LibraryBundle\Utils\Doctrine;
+namespace Vortexgin\LibraryBundle\Utils\Doctrine\ORM;
 
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query;
@@ -27,10 +27,10 @@ class ResultManipulator
      * 
      * @return mixed
      */
-    protected function getResult(QueryBuilder $queryBuilder, $hydration = Query::HYDRATE_OBJECT, $useCache = true, $lifetime = 60)
+    public function getResult(QueryBuilder $queryBuilder, $hydration = Query::HYDRATE_OBJECT, $useCache = true, $lifetime = 60)
     {
         $query = $queryBuilder->getQuery();
-        $query->useResultCache($useCache, $lifetime, sprintf('%s_%s', $this->class, serialize($query->getParameters())));
+        $query->useResultCache($useCache, $lifetime, $query->getSQL());
         $query->useQueryCache($useCache);
         $result = $query->getResult($hydration);
 
@@ -47,10 +47,10 @@ class ResultManipulator
      * 
      * @return mixed
      */
-    protected function getOneOrNullResult(QueryBuilder $queryBuilder, $hydration = Query::HYDRATE_OBJECT, $useCache = true, $lifetime = 60)
+    public function getOneOrNullResult(QueryBuilder $queryBuilder, $hydration = Query::HYDRATE_OBJECT, $useCache = true, $lifetime = 60)
     {
         $query = $queryBuilder->getQuery();
-        $query->useResultCache($useCache, $lifetime, sprintf('%s_%s', $this->class, serialize($query->getParameters())));
+        $query->useResultCache($useCache, $lifetime, $query->getSQL());
         $query->useQueryCache($useCache);
         $result = $query->getOneOrNullResult($hydration);
 
@@ -66,10 +66,10 @@ class ResultManipulator
      * 
      * @return mixed
      */
-    protected function getSingleScalarResult(QueryBuilder $queryBuilder, $useCache = true, $lifetime = 60)
+    public function getSingleScalarResult(QueryBuilder $queryBuilder, $useCache = true, $lifetime = 60)
     {
         $query = $queryBuilder->getQuery();
-        $query->useResultCache($useCache, $lifetime, sprintf('%s_%s', $this->class, serialize($query->getParameters())));
+        $query->useResultCache($useCache, $lifetime, $query->getSQL());
         $query->useQueryCache($useCache);
         $result = $query->getSingleScalarResult();
 
