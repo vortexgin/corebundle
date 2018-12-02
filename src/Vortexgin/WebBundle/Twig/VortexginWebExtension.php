@@ -48,6 +48,8 @@ class VortexginWebExtension extends AbstractExtension
             new TwigFilter('form_generate_token', array($this, 'formTokenizerGenerateToken')),
             new TwigFilter('filter_admin_actions', array($this, 'filterActions')),
             new TwigFilter('parse_url', array($this, 'parseUrl')),
+            new TwigFilter('truncate_content', array($this, 'truncateContent')),
+            new TwigFilter('timeago', array($this, 'timeAgo')),
         );
     }
 
@@ -89,6 +91,68 @@ class VortexginWebExtension extends AbstractExtension
     public function parseUrl($url, $parse)
     {
         return parse_url($url, $parse);
+    }
+
+    /**
+     * Twig Filter Truncate Content
+     * 
+     * @param string  $str      String to truncate
+     * @param int     $len      Length
+     * @param boolean $readMore Using read more?
+     * @param string  $url      Read more link
+     * @param string  $target   Link target
+     * 
+     * @return string
+     */
+    public function truncateContent($str, $len, $readMore = false, $url = null, $target = null)
+    {
+        if (strlen($str) > $len) {
+            $str = substr($str, 0, $len);
+            $str .= '...';
+        }
+        if ($readMore === true) {
+            if ($target != null) {
+                $target = sprintf('target="%s"', $target);
+            } else {
+                $target = '';
+            }
+            $str = sprintf('%s <a href="%s" %s>read more</a>', $str, $url, $target);
+        }
+        return $str;
+    }
+
+    /**
+     * Twig Filter Time Ago
+     * 
+     * @param mixed $date Date
+     * 
+     * @return string
+     */
+    public function timeAgo($date)
+    {
+        if ($date instanceof \DateTime) {
+            $date = $data->format('Y-m-d G:i:s');
+        }
+
+        $time = time() - strtotime($date); 
+
+        $units = array (
+            31536000 => 'year',
+            2592000 => 'month',
+            604800 => 'week',
+            86400 => 'day',
+            3600 => 'hour',
+            60 => 'minute',
+            1 => 'second'
+        );
+
+        foreach ($units as $unit => $val) {
+            if ($time < $unit) continue;
+            $numberOfUnits = floor($time / $unit);
+            return ($val == 'second')? 'a few seconds ago' : 
+                (($numberOfUnits>1) ? $numberOfUnits : 'a')
+                .' '.$val.(($numberOfUnits>1) ? 's' : '').' ago';
+        }
     }
 
     /**
