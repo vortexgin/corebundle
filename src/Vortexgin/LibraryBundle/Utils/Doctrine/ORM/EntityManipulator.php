@@ -286,7 +286,7 @@ class EntityManipulator extends CacheManipulator
                     $queryBuilder->orderBy(sprintf('o.%s', $key), $value);
                 }
             }
-            $result = $this->_resultManipulator->getOneOrNullResult($hydration);
+            $result = $this->_resultManipulator->getOneOrNullResult($queryBuilder, $hydration);
     
             $this->saveCache($cacheId, $result);
         }
