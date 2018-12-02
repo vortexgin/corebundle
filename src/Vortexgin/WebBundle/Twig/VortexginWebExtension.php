@@ -131,7 +131,7 @@ class VortexginWebExtension extends AbstractExtension
     public function timeAgo($date)
     {
         if ($date instanceof \DateTime) {
-            $date = $data->format('Y-m-d G:i:s');
+            $date = $date->format('Y-m-d G:i:s');
         }
 
         $time = time() - strtotime($date); 

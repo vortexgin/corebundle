@@ -186,35 +186,15 @@ class EntityManipulator extends CacheManipulator
      * 
      * @return mixed
      */
-    public function find($id)
+    public function find($id, $hydration = Query::HYDRATE_OBJECT)
     {
         $cacheId = sprintf('find_%s_%s', $this->getEntityShortName(), $id);
-        $object = $this->fetchFromCache($cacheId);
-
-        if (!$object) {
-            $object = $this->_repo->find($id);
-            $this->saveCache($cacheId, $object);
-        }
-
-        return $object;
-    }
-
-    /**
-     * Function to find data by id with returning format is array
-     * 
-     * @param string $id ID of entity
-     * 
-     * @return mixed
-     */
-    public function findArray($id)
-    {
-        $cacheId = sprintf('find_array_%s_%s', $this->getEntityShortName(), $id);
         $result = $this->fetchFromCache($cacheId);
 
         if (!$result) {
             $queryBuilder = $this->_repo->createQueryBuilder('o');
             $queryBuilder->andWhere($queryBuilder->expr()->eq('o.id', $id));
-            $result = $this->_resultManipulator->getOneOrNullResult(Query::HYDRATE_ARRAY);
+            $result = $this->_resultManipulator->getOneOrNullResult($hydration);
 
             $this->saveCache($cacheId, $result);
         }
@@ -225,50 +205,18 @@ class EntityManipulator extends CacheManipulator
     /**
      * Function to find data by array criteria
      * 
-     * @param array $criteria Array of criteria
-     * @param array $orderBy  Sort order
-     * @param array $limit    Data limit
-     * @param array $offset   Data offsett
+     * @param array $criteria  Array of criteria
+     * @param array $orderBy   Sort order
+     * @param array $limit     Data limit
+     * @param array $offset    Data offsett
+     * @param int   $hydration Hydration type
      * 
      * @return mixed
      */
-    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null, $hydration = Query::HYDRATE_OBJECT)
     {
         $cacheId = sprintf(
             'find_by_%s_%s', $this->getEntityShortName(), 
-            serialize(
-                array(
-                    'criteria' => $criteria, 
-                    'orderBy' => $orderBy, 
-                    'limit' => $limit, 
-                    'offset' => $offset, 
-                )
-            )
-        );
-        $object = $this->fetchFromCache($cacheId);
-
-        if (!$object) {
-            $object = $this->_repo->findBy($criteria, $orderBy, $limit, $offset);
-            $this->saveCache($cacheId, $object);
-        }
-
-        return $object;
-    }
-
-    /**
-     * Function to find data by array criteria with returning array format
-     * 
-     * @param array $criteria Array of criteria
-     * @param array $orderBy  Sort order
-     * @param array $limit    Data limit
-     * @param array $offset   Data offsett
-     * 
-     * @return mixed
-     */
-    public function findByArray(array $criteria, array $orderBy = null, $limit = null, $offset = null)
-    {
-        $cacheId = sprintf(
-            'find_by_array_%s_%s', $this->getEntityShortName(), 
             serialize(
                 array(
                     'criteria' => $criteria, 
@@ -297,7 +245,7 @@ class EntityManipulator extends CacheManipulator
             if (!empty($offset)) {
                 $queryBuilder->setFirstResult($offset);
             }
-            $result = $this->_resultManipulator->getResult($queryBuilder, Query::HYDRATE_ARRAY);
+            $result = $this->_resultManipulator->getResult($queryBuilder, $hydration);
     
             $this->saveCache($cacheId, $result);
         }
@@ -308,44 +256,16 @@ class EntityManipulator extends CacheManipulator
     /**
      * Function to find one data by array criteria
      * 
-     * @param array $criteria Array of criteria
-     * @param array $orderBy  Sort order
+     * @param array $criteria  Array of criteria
+     * @param array $orderBy   Sort order
+     * @param int   $hydration Hydration type
      * 
      * @return mixed
      */
-    public function findOneBy(array $criteria, array $orderBy = null)
+    public function findOneBy(array $criteria, array $orderBy = null, $hydration = Query::HYDRATE_OBJECT)
     {
         $cacheId = sprintf(
             'find_one_by_%s_%s', $this->getEntityShortName(), 
-            serialize(
-                array(
-                    'criteria' => $criteria, 
-                    'orderBy' => $orderBy, 
-                )
-            )
-        );
-        $object = $this->fetchFromCache($cacheId);
-
-        if (!$object) {
-            $object = $this->_repo->findOneBy($criteria, $orderBy);
-            $this->saveCache($cacheId, $object);
-        }
-
-        return $object;
-    }
-
-    /**
-     * Function to find data by array criteria with returning array format
-     * 
-     * @param array $criteria Array of criteria
-     * @param array $orderBy  Sort order
-     * 
-     * @return mixed
-     */
-    public function findOneByArray(array $criteria, array $orderBy = null)
-    {
-        $cacheId = sprintf(
-            'find_one_by_array_%s_%s', $this->getEntityShortName(), 
             serialize(
                 array(
                     'criteria' => $criteria, 
@@ -366,7 +286,7 @@ class EntityManipulator extends CacheManipulator
                     $queryBuilder->orderBy(sprintf('o.%s', $key), $value);
                 }
             }
-            $result = $this->_resultManipulator->getOneOrNullResult(Query::HYDRATE_ARRAY);
+            $result = $this->_resultManipulator->getOneOrNullResult($hydration);
     
             $this->saveCache($cacheId, $result);
         }
