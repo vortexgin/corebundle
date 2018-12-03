@@ -56,7 +56,7 @@ class ConnectionManager
                 return false;
 
             if (in_array($method, ['POST', 'PUT', 'PATCH'])) {
-                $_param = ['body' => $param];
+                $_param = ['form_params' => $param];
             } elseif ($method == 'GET') {
                 $_param = ['query' => $param];
             } else {
@@ -167,8 +167,6 @@ class ConnectionManager
 
             return $response;
         } catch (\Exception $e) {
-            var_dump($e->getMessage());
-            var_dump($e->getTraceAsString());
             return false;
         }
     }

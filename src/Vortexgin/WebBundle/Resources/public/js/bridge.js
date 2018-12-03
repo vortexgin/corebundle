@@ -1,5 +1,4 @@
 var Bridge = {
-    //host: (_ENV == 'prod') ? 'https://expo.bca.co.id' : 'http://expoversary.local', 
     host: window.location.protocol + '//' + window.location.hostname, 
     requestAction: function(url, method, param, options, cache) {
         if (empty(url)) {
