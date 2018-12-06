@@ -22,13 +22,13 @@ class Encrypt
      * 
      * @return mixed
      */
-    public static function encode($string, $secret)
+    public static function encode($string, $secret, $tag='vortexgin')
     {
         $cipher = "aes-128-gcm";
         if (in_array($cipher, openssl_get_cipher_methods())) {
             $ivlen = openssl_cipher_iv_length($cipher);
             $iv = openssl_random_pseudo_bytes($ivlen);
-            return openssl_encrypt($string, $cipher, $secret, 0, $iv);
+            return openssl_encrypt($string, $cipher, $secret, 0, $iv, $tag);
         }
 
         return false;
@@ -42,13 +42,13 @@ class Encrypt
      * 
      * @return mixed
      */
-    public static function decode($string, $secret)
+    public static function decode($string, $secret, $tag='vortexgin')
     {
         $cipher = "aes-128-gcm";
         if (in_array($cipher, openssl_get_cipher_methods())) {
             $ivlen = openssl_cipher_iv_length($cipher);
             $iv = openssl_random_pseudo_bytes($ivlen);
-            return openssl_decrypt($string, $cipher, $secret, 0, $iv);
+            return openssl_decrypt($string, $cipher, $secret, 0, $iv, $tag);
         }
 
         return false;
