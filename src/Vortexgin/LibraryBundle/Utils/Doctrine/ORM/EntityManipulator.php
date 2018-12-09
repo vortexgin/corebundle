@@ -204,7 +204,7 @@ class EntityManipulator extends CacheManipulator
         if (!$result) {
             $queryBuilder = $this->_repo->createQueryBuilder('o');
             $queryBuilder->andWhere($queryBuilder->expr()->eq('o.id', $id));
-            $result = $this->_resultManipulator->getOneOrNullResult($hydration);
+            $result = $this->_resultManipulator->getOneOrNullResult($queryBuilder, $hydration);
 
             $this->saveCache($cacheId, $result);
         }
