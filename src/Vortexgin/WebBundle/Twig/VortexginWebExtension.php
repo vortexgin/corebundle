@@ -5,6 +5,7 @@ namespace Vortexgin\WebBundle\Twig;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Vortexgin\LibraryBundle\Manager\FormTokenizerManager;
+use Vortexgin\LibraryBundle\Utils\StringUtils;
 
 /**
  * VortexginWebExtension
@@ -50,6 +51,7 @@ class VortexginWebExtension extends AbstractExtension
             new TwigFilter('parse_url', array($this, 'parseUrl')),
             new TwigFilter('truncate_content', array($this, 'truncateContent')),
             new TwigFilter('timeago', array($this, 'timeAgo')),
+            new TwigFilter('slugify', array($this, 'slugify')),
         );
     }
 
@@ -153,6 +155,16 @@ class VortexginWebExtension extends AbstractExtension
                 (($numberOfUnits>1) ? $numberOfUnits : 'a')
                 .' '.$val.(($numberOfUnits>1) ? 's' : '').' ago';
         }
+    }
+
+    /**
+     * Slugify
+     * 
+     * @return string
+     */
+    public function slugify($string, $separator = '-')
+    {
+        return StringUtils::createSlug($string, $separator);
     }
 
     /**
