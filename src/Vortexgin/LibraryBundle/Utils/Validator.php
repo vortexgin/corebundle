@@ -170,16 +170,15 @@ class Validator
                                 }
                             } else {
                                 if (!$type->isCollection()) {
-                                    if (!self::validate($params, $property, 'null', 'empty')) {
+                                    if (!self::validate($params, $property, null, 'null')) {
                                         return $shortDesc.' cannot be empty';
                                     }    
                                 }
                             }
                         }
-    
                     }
 
-                    if (!self::validate($params, $property, 'null', 'empty')) {
+                    if (!self::validate($params, $property, null, 'null')) {
                         continue;
                     }
 

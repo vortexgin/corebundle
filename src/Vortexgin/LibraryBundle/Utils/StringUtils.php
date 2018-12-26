@@ -221,4 +221,18 @@ class StringUtils
 
         return $excerpt;
     }
+
+    /**
+     * Function to masking email
+     * 
+     * @param string $email Email 
+     * @param int    $len   Length to masking
+     * 
+     * @return string
+     */
+    static public function maskingEmail($email, $len = 3)
+    {
+        $mask = str_repeat('*', $len);
+        return substr($email, 0, $len).$mask.substr($email, strpos($email, "@"));
+    }
 }
