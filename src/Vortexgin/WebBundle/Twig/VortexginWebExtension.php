@@ -52,6 +52,7 @@ class VortexginWebExtension extends AbstractExtension
             new TwigFilter('truncate_content', array($this, 'truncateContent')),
             new TwigFilter('timeago', array($this, 'timeAgo')),
             new TwigFilter('slugify', array($this, 'slugify')),
+            new TwigFilter('masking_string', array($this, 'maskingString')),
             new TwigFilter('masking_email', array($this, 'maskingEmail')),
         );
     }
@@ -166,6 +167,16 @@ class VortexginWebExtension extends AbstractExtension
     public function slugify($string, $separator = '-')
     {
         return StringUtils::createSlug($string, $separator);
+    }
+
+    /**
+     * Masking String
+     * 
+     * @return string
+     */
+    public function maskingString($string, $len = -3)
+    {
+        return StringUtils::maskingString($string, $len);
     }
 
     /**

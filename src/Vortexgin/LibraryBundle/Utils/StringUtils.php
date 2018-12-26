@@ -235,4 +235,18 @@ class StringUtils
         $mask = str_repeat('*', $len);
         return substr($email, 0, $len).$mask.substr($email, strpos($email, "@"));
     }
+
+    /**
+     * Function to masking string
+     * 
+     * @param string $string String 
+     * @param int    $len    Length to masking
+     * 
+     * @return string
+     */
+    static public function maskingString($string, $len = -3)
+    {
+        $mask = str_repeat('*', $len);
+        return substr($string, 0, $len).$mask;
+    }
 }
