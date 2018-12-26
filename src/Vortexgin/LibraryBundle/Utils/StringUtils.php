@@ -244,9 +244,9 @@ class StringUtils
      * 
      * @return string
      */
-    static public function maskingString($string, $len = -3)
+    static public function maskingString($string, $len = 3)
     {
         $mask = str_repeat('*', $len);
-        return substr($string, 0, $len).$mask;
+        return substr($string, 0, -$len).$mask;
     }
 }

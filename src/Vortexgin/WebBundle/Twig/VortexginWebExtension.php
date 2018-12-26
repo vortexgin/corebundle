@@ -174,7 +174,7 @@ class VortexginWebExtension extends AbstractExtension
      * 
      * @return string
      */
-    public function maskingString($string, $len = -3)
+    public function maskingString($string, $len = 3)
     {
         return StringUtils::maskingString($string, $len);
     }
