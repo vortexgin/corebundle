@@ -81,17 +81,32 @@ class CsvExporter
             foreach ($entities as $entity) {
                 $rows[] = $this->getValue($entity);
             }
-            return new Response(
-                $this->serializer->serialize($rows, 'csv'), 
-                200, 
-                array(
-                    'Content-Type' => 'text/csv; charset=utf-8', 
-                    'Content-Disposition' => 'attachment; filename="export.csv"', 
-                )
-            );
+            
+            return $this->getResponseFromArray($rows);
         }
 
         throw new \InvalidArgumentException('No result from this entity', 404);
+    }
+
+    /**
+     * Function to stream array into csv
+     * 
+     * @param \Doctrine\ORM\QueryBuilder $queryBuilder Query builder
+     * @param string                     $columns      Columns of query
+     * @param string                     $filename     File name
+     * 
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
+    public function getResponseFromArray(array $rows = array())
+    {
+        return new Response(
+            $this->serializer->serialize($rows, 'csv'), 
+            200, 
+            array(
+                'Content-Type' => 'text/csv; charset=utf-8', 
+                'Content-Disposition' => 'attachment; filename="export.csv"', 
+            )
+        );
     }
 
     /**
