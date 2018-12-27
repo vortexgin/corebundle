@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
 use Vortexgin\LibraryBundle\Utils\CamelCasizer;
 use Vortexgin\APIBundle\Utils\LogEntityChanges;
+use Vortexgin\LibraryBundle\Utils\Validator;
 
 /**
  * Entity manipulator functions
@@ -161,14 +162,26 @@ class EntityManipulator extends CacheManipulator
             $this->_entity->setUpdatedAt(new \DateTime());            
         }
         if (method_exists($this->_entity, 'setUpdatedBy')) {
-            $this->_entity->setUpdatedBy('Anon.');            
+            if (Validator::validate($data, 'updatedBy', null, 'empty')) {
+                $this->_entity->setUpdatedBy($data['updatedBy']);
+            } elseif (Validator::validate($data, 'updated_by', null, 'empty')) {
+                $this->_entity->setUpdatedBy($data['updated_by']);
+            } else {
+                $this->_entity->setUpdatedBy('Anon.');            
+            }
         }
         if (!$this->_entity->getId()) {
             if (method_exists($this->_entity, 'setCreatedAt')) {
                 $this->_entity->setCreatedAt(new \DateTime());            
             }
             if (method_exists($this->_entity, 'setCreatedBy')) {
-                $this->_entity->setCreatedBy('Anon.');            
+                if (Validator::validate($data, 'createdBy', null, 'empty')) {
+                    $this->_entity->setCreatedBy($data['createdBy']);
+                } elseif (Validator::validate($data, 'created_by', null, 'empty')) {
+                    $this->_entity->setCreatedBy($data['created_by']);
+                } else {
+                    $this->_entity->setCreatedBy('Anon.');            
+                }
             }
         } else {
             $logManager = new LogEntityChanges($this->_em);
