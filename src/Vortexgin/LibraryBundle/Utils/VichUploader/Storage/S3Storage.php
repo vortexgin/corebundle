@@ -78,16 +78,13 @@ class S3Storage extends AbstractStorage
     
     protected function doUpload(PropertyMapping $mapping, UploadedFile $file, ?string $dir, string $name)
     {
-        var_dump($dir);
-        var_dump($name);
-        die;
         $file->move($this->_tmp, $name);
-        return $this->_s3->putObjectFile($this->_tmp.$name, $this->_bucket, $dir, $s3::ACL_PUBLIC_READ);
+        return @$this->_s3->putObjectFile($this->_tmp.$name, $this->_bucket, $dir, $s3::ACL_PUBLIC_READ);
     }
 
     protected function doRemove(PropertyMapping $mapping, ?string $dir, string $name): ?bool
     {
-        return $this->_s3->deleteObject($this->_bucket, $dir.DIRECTORY_SEPARATOR.$name);
+        return @$this->_s3->deleteObject($this->_bucket, $dir.DIRECTORY_SEPARATOR.$name);
     }
 
     protected function doResolvePath(PropertyMapping $mapping, ?string $dir, string $name, ?bool $relative = false): string
