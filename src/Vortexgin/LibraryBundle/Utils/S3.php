@@ -713,11 +713,11 @@ class S3
         $type = false;
         // Fileinfo documentation says fileinfo_open() will use the
         // MAGIC env var for the magic file
-        $finfo = finfo_open(FILEINFO_MIME, $_ENV['MAGIC']);
         if (extension_loaded('fileinfo') 
             && isset($_ENV['MAGIC']) 
-            && $finfo !== false
+            && finfo_open(FILEINFO_MIME, $_ENV['MAGIC']) !== false
         ) {
+            $finfo = finfo_open(FILEINFO_MIME, $_ENV['MAGIC']);
             if (($type = finfo_file($finfo, $file)) !== false) {
                 // Remove the charset and grab the last content-type
                 $type = explode(' ', str_replace('; charset=', ';charset=', $type));
