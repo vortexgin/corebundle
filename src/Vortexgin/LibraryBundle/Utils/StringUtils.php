@@ -266,18 +266,33 @@ class StringUtils
     {
         $id = self::$id;
         $en = self::$en;
-        $stopwords = (strtolower($lang) == 'id')?$id:$en;
+        $excepts = array(
+            '/(\d)/im',
+            '/\n/im',
+        );
 
-        $string = str_ireplace(array('.', ',', '!', '#', ';', '-'), '', $string);
+        $string = str_ireplace(array('.', ',', '!', '?', '#', ';', ':', '-', '(', ')', '/', '&', '“', '...', '…'), '', $string);
         $exp = explode(' ', $string);
 
         $token = array();
         foreach ($exp as $value) {
             $word = trim($value);
-            if (!empty($word) && !in_array($word, $stopwords)) {
-                $token[] = $word;
+            if (!empty($word) && !in_array($word, $id) && !in_array($word, $en)) {
+                $exception = false;
+                foreach ($excepts as $except) {
+                    if (preg_match($except, $word)) {
+                        $exception = true;
+                    }
+                }
+                if (is_numeric($word)) {
+                    $exception = true;
+                }
+                if ($exception === false){
+                    $token[] = $word;
+                }
             }
         }
+
 
         return $token;
     }
