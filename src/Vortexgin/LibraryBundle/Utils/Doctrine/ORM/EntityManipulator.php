@@ -167,7 +167,7 @@ class EntityManipulator extends CacheManipulator
             } elseif (Validator::validate($data, 'updated_by', null, 'empty')) {
                 $this->_entity->setUpdatedBy($data['updated_by']);
             } else {
-                $this->_entity->setUpdatedBy('Anon.');            
+                //$this->_entity->setUpdatedBy('Anon.');            
             }
         }
         if (!$this->_entity->getId()) {
@@ -180,7 +180,7 @@ class EntityManipulator extends CacheManipulator
                 } elseif (Validator::validate($data, 'created_by', null, 'empty')) {
                     $this->_entity->setCreatedBy($data['created_by']);
                 } else {
-                    $this->_entity->setCreatedBy('Anon.');            
+                    //$this->_entity->setCreatedBy('Anon.');            
                 }
             }
         } else {
