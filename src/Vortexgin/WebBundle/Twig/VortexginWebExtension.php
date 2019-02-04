@@ -50,6 +50,7 @@ class VortexginWebExtension extends AbstractExtension
             new TwigFilter('filter_admin_actions', array($this, 'filterActions')),
             new TwigFilter('parse_url', array($this, 'parseUrl')),
             new TwigFilter('truncate_content', array($this, 'truncateContent')),
+            new TwigFilter('truncate_word', array($this, 'truncateWord')),
             new TwigFilter('timeago', array($this, 'timeAgo')),
             new TwigFilter('slugify', array($this, 'slugify')),
             new TwigFilter('masking_string', array($this, 'maskingString')),
@@ -113,6 +114,41 @@ class VortexginWebExtension extends AbstractExtension
         if (strlen($str) > $len) {
             $str = substr($str, 0, $len);
             $str .= '...';
+        }
+        if ($readMore === true) {
+            if ($target != null) {
+                $target = sprintf('target="%s"', $target);
+            } else {
+                $target = '';
+            }
+            $str = sprintf('%s <a href="%s" %s>read more</a>', $str, $url, $target);
+        }
+        return $str;
+    }
+
+    /**
+     * Twig Filter Truncate Word
+     * 
+     * @param string  $str      String to truncate
+     * @param int     $len      Length
+     * @param boolean $readMore Using read more?
+     * @param string  $url      Read more link
+     * @param string  $target   Link target
+     * 
+     * @return string
+     */
+    public function truncateWord($str, $count, $readMore = false, $url = null, $target = null)
+    {
+        $exp = explode(' ', $str);
+        if (count($exp) > $count) {
+            $tmp = [];
+            foreach ($exp as $index=>$word) {
+                if ($index >= $count) {
+                    break;
+                }
+                $tmp[] = $word;
+            }
+            $str = sprintf('%s...', implode(' ', $tmp));
         }
         if ($readMore === true) {
             if ($target != null) {
