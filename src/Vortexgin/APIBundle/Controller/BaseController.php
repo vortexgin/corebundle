@@ -167,8 +167,7 @@ class BaseController extends Controller
             $response = new Response($this->serializer->serialize($param, 'xml'), $httpStatusCode, $customHeader);
             break;
         default :
-            $customHeader['content-type'] = 'text/yaml';
-            $response = new JsonResponse($content, $httpStatusCode, $customHeader);
+            $response = new JsonResponse($content, $httpStatusCode);
             break;
         }
 
@@ -257,7 +256,7 @@ class BaseController extends Controller
             $response = new Response($this->serializer->serialize($param, 'xml'), $httpStatusCode, $customHeader);
             break;
         default:
-            $response = new JsonResponse($param, $httpStatusCode, $customHeader);
+            $response = new JsonResponse($param, $httpStatusCode);
             break;
         }
 
