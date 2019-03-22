@@ -62,7 +62,7 @@ class EasyAdminController extends BaseAdminController
         $validator = new Validator($this->container->get('doctrine')->getManager());
         $fileValid = $validator->validateFileOnEntity($entity);
         if ($fileValid !== true) {
-            throw new Exception("File not valid");
+            throw new \Exception("File not valid");
         }
 
         $entity = $this->updateSlug($entity);
@@ -84,7 +84,7 @@ class EasyAdminController extends BaseAdminController
         $validator = new Validator($this->container->get('doctrine')->getManager());
         $fileValid = $validator->validateFileOnEntity($entity);
         if ($fileValid !== true) {
-            throw new Exception("File not valid");
+            throw new \Exception("File not valid");
         }
 
         $entity = $this->updateSlug($entity);

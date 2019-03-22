@@ -68,10 +68,16 @@ class FileUtils
         'xlsx' => 'application/vnd.ms-excel',
         'pptx' => 'application/vnd.ms-powerpoint',
 
-
         // open office
         'odt' => 'application/vnd.oasis.opendocument.text',
         'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
+        
+        // open office
+        'otf' => 'font/otf',
+        'ttf' => 'application/x-font-ttf',
+        'ttf' => 'font/ttf',
+        'woff' => 'font/woff',
+        'woff2' => 'font/woff2',
     );
 
     /**
