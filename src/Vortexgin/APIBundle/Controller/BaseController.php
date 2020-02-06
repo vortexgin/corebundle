@@ -12,11 +12,8 @@ use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\YamlEncoder;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
-use Doctrine\ORM\QueryBuilder;
 use Vortexgin\LibraryBundle\Model\EntityInterface;
-use Vortexgin\LibraryBundle\Utils\CamelCasizer;
 use Vortexgin\LibraryBundle\Utils\HttpStatusHelper;
 use Vortexgin\LibraryBundle\Utils\Validator;
 use Vortexgin\LibraryBundle\Utils\Doctrine\ORM\FilterGenerator;
@@ -101,9 +98,10 @@ class BaseController extends Controller
 
         $this->class = $class;
         $this->className = $this->em->getClassMetadata($class)->getName();
-        
-        $encoders = array(new XmlEncoder(), new JsonEncoder(), new YamlEncoder(), new CsvEncoder());
+        $path = explode('\\', $class);
+        $this->className = array_pop($path);
 
+        $encoders = array(new XmlEncoder(), new JsonEncoder(), new YamlEncoder(), new CsvEncoder());
         $methodNormalizer = new GetSetMethodNormalizer();
         $methodNormalizer->setCircularReferenceHandler(
             function ($object) {
@@ -303,7 +301,7 @@ class BaseController extends Controller
 
             $objects = $this->repo->findBy($filters, [$orderBy => $orderSort], $limit, ($page * $limit) - $limit);
             if (!$objects) {
-                return $this->errorResponse($this->class.' not found', HttpStatusHelper::HTTP_NOT_FOUND);
+                return $this->errorResponse($this->className.' not found', HttpStatusHelper::HTTP_NOT_FOUND);
             }
 
             return $this->successResponse(
@@ -340,7 +338,7 @@ class BaseController extends Controller
             $object = $entityManipulator->find($id);
 
             if (!$object) {
-                return $this->errorResponse($this->class.' not found', HttpStatusHelper::HTTP_NOT_FOUND);
+                return $this->errorResponse($this->className.' not found', HttpStatusHelper::HTTP_NOT_FOUND);
             }
 
             return $this->successResponse(
@@ -423,7 +421,7 @@ class BaseController extends Controller
 
             $object = $this->repo->find($id);
             if (!$object) {
-                return $this->errorResponse($this->class.' not found', HttpStatusHelper::HTTP_NOT_FOUND);
+                return $this->errorResponse($this->className.' not found', HttpStatusHelper::HTTP_NOT_FOUND);
             }
 
             $entityManipulator = new EntityManipulator($this->em, $object);

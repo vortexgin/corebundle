@@ -7,6 +7,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Stream\Stream;
+use GuzzleHttp\Psr7\Stream as Psr7Stream;
 use Vortexgin\LibraryBundle\Utils\StringUtils;
 
 /**
@@ -142,6 +143,9 @@ class ConnectionManager
         } catch (BadResponseException $e) {
             $content = $e->getResponse()->getBody();
             if ($e->getResponse()->getBody() instanceof Stream) {
+                $content = $e->getResponse()->getBody()->getContents();
+            }
+            if ($e->getResponse()->getBody() instanceof Psr7Stream) {
                 $content = $e->getResponse()->getBody()->getContents();
             }
             if ($toArray === true && StringUtils::isJson($content)) {

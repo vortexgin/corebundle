@@ -75,11 +75,10 @@ class CsvExporter
         if ($entities->count() > 0) {
             $rows = array();
 
-            //$title = $this->getTitle($entities);
-            //$rows[] = $title;
-
             foreach ($entities as $entity) {
-                if (method_exists($entity, 'toArray')) {
+                if (method_exists($entity, 'exportFields')) {
+                    $rows[] = $entity->exportFields();
+                } elseif (method_exists($entity, 'toArray')) {
                     $rows[] = $entity->toArray();
                 } else {
                     $rows[] = $this->getValue($entity);
